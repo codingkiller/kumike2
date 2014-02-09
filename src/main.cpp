@@ -25,10 +25,17 @@
 
 using namespace bb::cascades;
 
+void myMessageOutput(QtMsgType type, const char* msg) {
+ std::fprintf(stdout, "%s\n", msg);
+ std::fflush(stdout);
+}
+
+
 Q_DECL_EXPORT int main(int argc, char **argv)
 {
 	qmlRegisterType<NetworkBus>("NetworkBus", 1, 0, "NetworkBus");
     Application app(argc, argv);
+    qInstallMsgHandler(myMessageOutput);
 
 
     // Create the Application UI object, this is where the main.qml file

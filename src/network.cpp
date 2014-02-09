@@ -25,24 +25,57 @@ void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name
 	request.setUrl(QUrl(generateURL(city_id,line_name)));
 	pNetworkAccessManager->get(request);
 }
+void NetworkBus::changeBusLine(int m_dir){
+	this->m_dir = m_dir;
+	emit buslineChanged();
+}
+
 //! [1]
 void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 	if(reply->error() != QNetworkReply::NoError){
 		m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
 	}else{
-	//	m_buslineText = QString::fromUtf8(reply->readAll());
-	//	m_buslineText = m_buslineText;
-		JsonDataAccess jda;
+		JsonDataAccess jda; // at are you
 		const QVariant qtData = jda.loadFromBuffer(reply->readAll());
+		// TODO if qtData has some error
 
 		const QVariantMap map = qtData.toMap();
-		QVariantList data = map["data"].toList();
+		const QString msg = map.values("msg").value(0).toString();
+		const QString success = map.values("success").value(0).toString();
+		if(success != "true" || msg != "ok"){
+			m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
+			emit buslineChanged();
+			return;
+		}
+		//
+
+		const QVariantList data = map["data"].toList();
+		if(data.isEmpty() || data.length() == 0){
+			m_buslineText = QString::fromUtf8("未查询到该趟公交车数据！");
+			emit buslineChanged();
+			return ;
+		}
+		QString result = "";
+		for(int i=0;i<data.length();i++){
+			const QVariantMap iMap = data.at(i).toMap();
+			//begin_time":"06:00","dir":"0","end_station":"水斗富豪新村","end_time":"22:00","id":"99222",
+			//"isopen":"1","line_name":"M264","price":"2.5","start_station":"平湖鹅公岭总站"},{"
+			busline *bus = new busline;
+
+			bus->begin_time = iMap.value("begin_time").toString();
+			bus->end_time = iMap.value("end_time").toString();
+			bus->id = iMap.value("id").toString();
+			bus->start_station = iMap.value("start_station").toString();
+			bus->end_station = iMap.value("end_station").toString();
+			bus->price = iMap.value("price").toString();
+			bus->line_name = iMap.value("line_name").toString();
+			bus->isOpen = iMap.value("isopen").toInt();//1
+			bus->dir = iMap.value("dir").toInt();//0/1
+			if(i == 0)
+				startLine = *bus;
+			else endLine = *bus;
+		}
 		QString start_stop = data.at(0).toMap().value("start_station").toString();
-	//	QList<QVariant> data = map.values("data");
-		//QString start_stop = map["data"].value(0).toString();
-		QString msg = map.values("msg").value(0).toString();
-		QString success = map.values("success").value(0).toString();
-		QString da = qtData.toString();
 		m_buslineText = start_stop.append("ok");
 	}
 	emit buslineChanged();
@@ -60,4 +93,34 @@ void NetworkBus::changeCity(const QString newCity){
 
 QString NetworkBus::buslineText() const{
 	return m_buslineText;
+}
+QString NetworkBus::line_name() const{
+	return m_dir == 0 ? startLine.line_name : endLine.line_name;
+}
+QString NetworkBus::begin_time() const{
+	return m_dir ==0 ? startLine.begin_time : endLine.begin_time;
+}
+QString NetworkBus::end_time() const{
+	return m_dir ==0 ? startLine.end_time : endLine.end_time;
+}
+QString NetworkBus::start_station() const{
+	return m_dir ==0 ? startLine.start_station : endLine.start_station;
+}
+QString NetworkBus::end_station() const{
+	return m_dir ==0 ? startLine.end_station : endLine.end_station;
+}
+QString NetworkBus::price() const{
+	return m_dir ==0 ? startLine.price : endLine.price;
+}
+int NetworkBus::isOpen() const {
+	return m_dir ==0 ? startLine.isOpen : endLine.isOpen;
+}
+int NetworkBus::dir()const{
+	return 0;
+}
+QString NetworkBus::to_station_one()const{
+	return startLine.end_station;
+}
+QString NetworkBus::to_station_two() const {
+	return endLine.end_station;
 }
