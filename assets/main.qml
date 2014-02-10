@@ -17,6 +17,8 @@
 import bb.cascades 1.0
 import NetworkBus 1.0
 import bb.system 1.0
+NavigationPane {
+    id: navigationPane
 
 Page {
     
@@ -34,7 +36,7 @@ Page {
                 verticalAlignment: VerticalAlignment.Bottom
                 horizontalAlignment: HorizontalAlignment.Center
                 Label {
-                    text: "酷米客公交"
+                    text: qsTr("酷米客公交 ")
                     textStyle {
                         color: Color.White
                         fontSize: FontSize.XLarge
@@ -133,15 +135,16 @@ Page {
         TextField {
             id: line_name
             maxWidth: 440
-            hintText: "请输入实时公交线路"
-        }
+            hintText: qsTr("请输入实时公交线路 ")
+            }
         Button {
         	id: button
         	text: "查询"
         	maxWidth: 200
         	onClicked: {
                 networkBus.get_lines_by_city(listDialog.value,line_name.text)
-                busResultSheet.open();
+                var page = pageDefinition.createObject()
+                navigationPane.push(page)
          }
         }
         layout: StackLayout {
@@ -179,102 +182,26 @@ Page {
     attachedObjects: [
         NetworkBus {
             id: networkBus
-            
         }
     ]
-        
     }
-    attachedObjects: [
+/*    attachedObjects: [
         Sheet {
             id: busResultSheet
-            
             content: Page {
-                titleBar: TitleBar {
-                    kind: TitleBarKind.FreeForm
-                    kindProperties: FreeFormTitleBarKindProperties {
-                        Container {
-                            layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
-                            topPadding: 20
-                            verticalAlignment: VerticalAlignment.Bottom
-                            horizontalAlignment: HorizontalAlignment.Center
-                            ImageView {
-                                imageSource: "asset:///images/ic_previous.png"
-                                horizontalAlignment: HorizontalAlignment.Left
-                                onTouch: {
-                                    busResultSheet.close();
-                                }
-                            }
-                            Label {
-                                text: networkBus.line_name
-                                textStyle {
-                                    color: Color.White
-                                    fontSize: FontSize.XLarge
-                                    textAlign: TextAlign.Right
-                                }
-                                maxWidth: 400
-                                horizontalAlignment: HorizontalAlignment.Right
-                                layoutProperties: StackLayoutProperties { spaceQuota: 1 }
-                            }
-                        
-                        }
-                    }
+                ControlDelegate {
+                    source: "resultPage.qml"
+                    delegateActive: true
                 }
-                Container {
-                    Container {
-                        layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
-                        topPadding: 20
-                        verticalAlignment: VerticalAlignment.Center
-                        horizontalAlignment: HorizontalAlignment.Center
-                       
-                        SegmentedControl {
-                            id: selectLine
-                            Option {
-                                value: 0
-                                text: "开往"+networkBus.to_station_one
-                            }
-                            Option {
-                                value: 1
-                                text: "开往"+networkBus.to_station_two
-                            }
-                            //  accessibility.name: "TODO: Add property content"
-                            onSelectedIndexChanged: {
-                                networkBus.changeBusLine(selectedValue)
-                            }
-                        }
-                    }
-                    
-                    Divider {
-                     //   visible: true
-                     //   accessibility.name: "TODO: Add property content"
-                    }
-                    Container {
-                        layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
-                        topPadding: 20
-                        verticalAlignment: VerticalAlignment.Center
-                        horizontalAlignment: HorizontalAlignment.Center
-                        minHeight: 800
-                    }
-                    Container {
-                        layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
-                        topPadding: 20
-                        verticalAlignment: VerticalAlignment.Center
-                        horizontalAlignment: HorizontalAlignment.Center
-                        Label {
-                            text: networkBus.start_station+"首末班"+networkBus.begin_time+"-"+networkBus.end_time+" 全程"+networkBus.price+"元"
-                        }
-                        
-                    }
-                }
-                actions: [  
-                    ActionItem {  
-                        title: "返回"  
-                        ActionBar.placement: ActionBarPlacement.OnBar
-                        onTriggered: {  
-                            busResultSheet.close();  
-                        }  
-                    }  
-                ]   
             }
         }
-    ]
+    ]*/
+    attachedObjects: ComponentDefinition {
+        id: pageDefinition;
+        source: "resultPage.qml"
+    }
+}
+
+
+
 }

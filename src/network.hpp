@@ -26,6 +26,8 @@ class NetworkBus : public QObject{
 		int m_dir;
 		busline startLine;
 		busline endLine;
+		static NetworkBus* m_networkbus;
+	//	NetworkBus(){};
 
 	public Q_SLOTS:
 		void onBusLineFinished(QNetworkReply* reply);
@@ -38,7 +40,11 @@ class NetworkBus : public QObject{
 //		~NetworkBus();
 		void reloadData();
 		void locateBus();
-
+		static NetworkBus* instance(){
+			if(!m_networkbus)
+			m_networkbus = new NetworkBus;
+			return m_networkbus;
+		}
 		QString buslineText() const;
 		QString line_name() const;
 		QString begin_time() const;
