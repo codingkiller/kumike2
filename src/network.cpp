@@ -1,7 +1,7 @@
 #include "network.hpp"
 #include <bb/data/JsonDataAccess>
 #include <QtCore/QVariant>
-
+#include <iostream>
 using namespace bb::data;
 
 QString callbackString(){
@@ -15,6 +15,69 @@ QString generateURL( QString city_id,const QString line_name){
 	   return str;
 }
 
+void NetworkBus::get_subline_inf(const QString sid){
+	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
+	bool result;
+	Q_UNUSED(result);
+	result = connect(pNetworkAccessManager, SIGNAL(finished(QNetworkReply*)),this, SLOT(onSublineInfFinished(QNetworkReply*)));
+	Q_ASSERT(result);
+	QNetworkRequest request = QNetworkRequest();
+	m_all_station = subline_inf_url + sid;
+	request.setUrl(QUrl(subline_inf_url+sid));
+	std::cout << "m_all_station::" << m_all_station.toStdString();
+//	printf("m_all_station::%s",m_all_station);
+//	qDebug() << m_all_station ;
+	pNetworkAccessManager->get(request);
+}
+
+//! [1]
+void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
+	if(reply->error() != QNetworkReply::NoError){
+		m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
+	}else{
+		JsonDataAccess jda; // at are you
+		const QVariant qtData = jda.loadFromBuffer(reply->readAll());
+		// TODO if qtData has some error
+
+		const QVariantMap map = qtData.toMap();
+		const QString msg = map.values("msg").value(0).toString();
+		const QString success = map.values("success").value(0).toString();
+		if(success != "true" || msg != "ok"){
+			m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
+			emit buslineChanged();
+			return;
+		}
+		const QVariantMap data = map["data"].toMap();
+		m_all_station = map["data"].toString();
+		const QVariantList stations = data["stations"].toList();
+		if(stations.isEmpty() || stations.length() == 0){
+			m_buslineText = QString::fromUtf8("未查询到线路数据！");
+			emit buslineChanged();
+			return ;
+		}
+		qDebug() << "here we go1\n";
+		qDebug() << stations;
+		QString result = "";
+		startStation = new QList<station>;
+		endStation = new QList<station>;
+		m_all_station = "";
+		for(int i=0;i<stations.length();i++){
+			const QVariantMap var = stations.at(i).toMap();
+			station *sta = new station;
+			sta->code = var["code"].toString();
+			sta->id = var["id"].toString();
+			sta->lat = var["lat"].toString();
+			sta->lng = var["lng"].toString();
+			sta->name = var["name"].toString();
+			m_all_station += sta->name;
+			if(m_dir == 0)
+				startStation->append(*sta);
+			else endStation->append(*sta);
+
+		}
+	}
+	emit buslineChanged();
+}
 void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name){
 	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
 	bool result;
@@ -58,10 +121,7 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 		QString result = "";
 		for(int i=0;i<data.length();i++){
 			const QVariantMap iMap = data.at(i).toMap();
-			//begin_time":"06:00","dir":"0","end_station":"水斗富豪新村","end_time":"22:00","id":"99222",
-			//"isopen":"1","line_name":"M264","price":"2.5","start_station":"平湖鹅公岭总站"},{"
 			busline *bus = new busline;
-
 			bus->begin_time = iMap.value("begin_time").toString();
 			bus->end_time = iMap.value("end_time").toString();
 			bus->id = iMap.value("id").toString();
@@ -75,10 +135,9 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 				startLine = *bus;
 			else endLine = *bus;
 		}
-		QString start_stop = data.at(0).toMap().value("start_station").toString();
-		m_buslineText = start_stop.append("ok");
+		this->get_subline_inf(startLine.id);
 	}
-	emit buslineChanged();
+//	emit buslineChanged();
 }
 
 
@@ -123,4 +182,7 @@ QString NetworkBus::to_station_one()const{
 }
 QString NetworkBus::to_station_two() const {
 	return endLine.end_station;
+}
+QString NetworkBus::all_station() const{
+	return m_all_station;
 }

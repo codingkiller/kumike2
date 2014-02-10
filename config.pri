@@ -9,7 +9,8 @@ device {
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
-                 $$quote($$BASEDIR/src/network.hpp)
+                 $$quote($$BASEDIR/src/network.hpp) \
+                 $$quote($$BASEDIR/src/station.hpp)
     }
 
     CONFIG(release, debug|release) {
@@ -19,7 +20,8 @@ device {
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
-                 $$quote($$BASEDIR/src/network.hpp)
+                 $$quote($$BASEDIR/src/network.hpp) \
+                 $$quote($$BASEDIR/src/station.hpp)
     }
 }
 
@@ -31,7 +33,8 @@ simulator {
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
-                 $$quote($$BASEDIR/src/network.hpp)
+                 $$quote($$BASEDIR/src/network.hpp) \
+                 $$quote($$BASEDIR/src/station.hpp)
     }
 }
 

@@ -136,6 +136,7 @@ Page {
             id: line_name
             maxWidth: 440
             hintText: qsTr("请输入实时公交线路 ")
+            text: qsTr("M264")
             }
         Button {
         	id: button
@@ -179,11 +180,7 @@ Page {
             text: "起止时间"
         }
     }
-    attachedObjects: [
-        NetworkBus {
-            id: networkBus
-        }
-    ]
+    
     }
 /*    attachedObjects: [
         Sheet {
@@ -202,6 +199,10 @@ Page {
     }
 }
 
-
+attachedObjects: [
+    NetworkBus {
+        id: networkBus
+    }
+]
 
 }

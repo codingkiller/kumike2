@@ -1,10 +1,12 @@
 #ifndef Network_BUS_
 #define Network_BUS_
 #include <QtCore/QObject>
+#include <QtCore/QList>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include "busline.hpp"
+#include "station.hpp"
 class NetworkBus : public QObject{
     Q_OBJECT
     Q_PROPERTY(QString buslineText READ buslineText NOTIFY buslineChanged)
@@ -18,33 +20,31 @@ class NetworkBus : public QObject{
     Q_PROPERTY(int dir READ dir NOTIFY buslineChanged)
     Q_PROPERTY(QString to_station_one READ to_station_one NOTIFY buslineChanged)
     Q_PROPERTY(QString to_station_two READ to_station_two NOTIFY buslineChanged)
+    Q_PROPERTY(QString all_station READ all_station NOTIFY buslineChanged)
 
 
 	private:
 		QString city_id;
 		QString m_buslineText;
+		QString m_all_station;
 		int m_dir;
 		busline startLine;
 		busline endLine;
-		static NetworkBus* m_networkbus;
-	//	NetworkBus(){};
+		QList<station> *startStation;
+		QList<station> *endStation;
+		void get_subline_inf(const QString sid);
 
 	public Q_SLOTS:
 		void onBusLineFinished(QNetworkReply* reply);
 		void get_lines_by_city(const QString city_id,const QString line_name);
+		void onSublineInfFinished(QNetworkReply* reply);
 		void changeCity(const QString newCity);
 		void changeBusLine(const int m_dir);
 
-//		NetworkBus();
 	public:
-//		~NetworkBus();
 		void reloadData();
 		void locateBus();
-		static NetworkBus* instance(){
-			if(!m_networkbus)
-			m_networkbus = new NetworkBus;
-			return m_networkbus;
-		}
+
 		QString buslineText() const;
 		QString line_name() const;
 		QString begin_time() const;
@@ -56,11 +56,12 @@ class NetworkBus : public QObject{
 		int dir() const;
 		QString to_station_one() const;
 		QString to_station_two() const;
+		QString all_station() const;
 
 		Q_SIGNALS:
 			void buslineChanged();
 
 };
 const static QString busurl = "http://busi.gpsoo.net/v1/bus/get_lines_by_city?type=handset";
-
+const static QString subline_inf_url = "http://busi.gpsoo.net/v1/bus/get_subline_inf?mapType=G_NORMAL_MAP&sid=";
 #endif
