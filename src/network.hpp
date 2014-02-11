@@ -5,8 +5,11 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
+#include <bb/cascades/GroupDataModel>
 #include "busline.hpp"
 #include "station.hpp"
+using namespace bb::cascades;
+
 class NetworkBus : public QObject{
     Q_OBJECT
     Q_PROPERTY(QString buslineText READ buslineText NOTIFY buslineChanged)
@@ -21,18 +24,32 @@ class NetworkBus : public QObject{
     Q_PROPERTY(QString to_station_one READ to_station_one NOTIFY buslineChanged)
     Q_PROPERTY(QString to_station_two READ to_station_two NOTIFY buslineChanged)
     Q_PROPERTY(QString all_station READ all_station NOTIFY buslineChanged)
-
+    Q_PROPERTY(bb::cascades::DataModel* dataModel READ dataModel  NOTIFY buslineChanged)
 
 	private:
 		QString city_id;
 		QString m_buslineText;
 		QString m_all_station;
 		int m_dir;
-		busline startLine;
-		busline endLine;
+		busline *startLine;
+		busline *endLine;
+		GroupDataModel *m_dataModel;
 		QList<station> *startStation;
 		QList<station> *endStation;
 		void get_subline_inf(const QString sid);
+		void init(){
+			m_buslineText = "";
+			m_all_station = "";
+			m_dir = 0;
+			city_id = "";
+			startLine = new busline;
+			endLine = new busline;
+			startStation = new QList<station>;
+			endStation = new QList<station>;
+			m_dataModel = new GroupDataModel(QStringList() << "id" << "name" << "code" << "lat" << "lng");
+			m_dataModel->setGrouping(ItemGrouping::ByFirstChar);
+			emit buslineChanged();
+		}
 
 	public Q_SLOTS:
 		void onBusLineFinished(QNetworkReply* reply);
@@ -57,9 +74,10 @@ class NetworkBus : public QObject{
 		QString to_station_one() const;
 		QString to_station_two() const;
 		QString all_station() const;
-
+		bb::cascades::GroupDataModel *dataModel() const;
 		Q_SIGNALS:
 			void buslineChanged();
+			void stationChanged();
 
 };
 const static QString busurl = "http://busi.gpsoo.net/v1/bus/get_lines_by_city?type=handset";

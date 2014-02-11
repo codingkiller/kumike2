@@ -3,6 +3,7 @@
 #include <QtCore/QVariant>
 #include <iostream>
 using namespace bb::data;
+using namespace bb::cascades;
 
 QString callbackString(){
 	return "&callback=jQuery18209599413950927556_1391823966023&_=1391823975961";
@@ -63,22 +64,37 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 		m_all_station = "";
 		for(int i=0;i<stations.length();i++){
 			const QVariantMap var = stations.at(i).toMap();
-			station *sta = new station;
-			sta->code = var["code"].toString();
-			sta->id = var["id"].toString();
-			sta->lat = var["lat"].toString();
-			sta->lng = var["lng"].toString();
-			sta->name = var["name"].toString();
-			m_all_station += sta->name;
-			if(m_dir == 0)
-				startStation->append(*sta);
-			else endStation->append(*sta);
+			station *sta = new station();
+			sta->setCode(var["code"].toString());
+			sta->setId(var["id"].toString());
+			sta->setLat(var["lat"].toString());
+			sta->setLng(var["lng"].toString());
+			sta->setName(var["name"].toString());
+			m_all_station += sta->name();
+	//		Q_UNUSED(sta);
+	//		m_dataModel->append(sta);
+			QVariantMap map;
+			map["id"] = var["id"].toString();
+			map["name"] = var["name"].toString();
+			map["code"] = var["code"].toString();
+			map["lat"] = var["lat"].toString();
+			map["lng"] = var["lng"].toString();
+			m_dataModel->insert(map);
+		//	break;
+		//	if(m_dir == 0)
+	//			startStation->append(*sta);
+	//		else endStation->append(*sta);
 
 		}
 	}
+	qDebug() << "\nm_dataModel size :"<<m_dataModel->size() << "\n";
+//	qDebug() << "\nm_dataModel :"<<m_dataModel->value(1)->name() << "\n";
+//	qDebug() << "\nm_dataModel :"<<m_dataModel->value(2)->name() << "\n";
+//	emit stationChanged();
 	emit buslineChanged();
 }
 void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name){
+	init();
 	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
 	bool result;
 	Q_UNUSED(result);
@@ -132,10 +148,10 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 			bus->isOpen = iMap.value("isopen").toInt();//1
 			bus->dir = iMap.value("dir").toInt();//0/1
 			if(i == 0)
-				startLine = *bus;
-			else endLine = *bus;
+				startLine = bus;
+			else endLine = bus;
 		}
-		this->get_subline_inf(startLine.id);
+		this->get_subline_inf(startLine->id);
 	}
 //	emit buslineChanged();
 }
@@ -154,35 +170,38 @@ QString NetworkBus::buslineText() const{
 	return m_buslineText;
 }
 QString NetworkBus::line_name() const{
-	return m_dir == 0 ? startLine.line_name : endLine.line_name;
+	return m_dir == 0 ? startLine->line_name : endLine->line_name;
 }
 QString NetworkBus::begin_time() const{
-	return m_dir ==0 ? startLine.begin_time : endLine.begin_time;
+	return m_dir ==0 ? startLine->begin_time : endLine->begin_time;
 }
 QString NetworkBus::end_time() const{
-	return m_dir ==0 ? startLine.end_time : endLine.end_time;
+	return m_dir ==0 ? startLine->end_time : endLine->end_time;
 }
 QString NetworkBus::start_station() const{
-	return m_dir ==0 ? startLine.start_station : endLine.start_station;
+	return m_dir ==0 ? startLine->start_station : endLine->start_station;
 }
 QString NetworkBus::end_station() const{
-	return m_dir ==0 ? startLine.end_station : endLine.end_station;
+	return m_dir ==0 ? startLine->end_station : endLine->end_station;
 }
 QString NetworkBus::price() const{
-	return m_dir ==0 ? startLine.price : endLine.price;
+	return m_dir ==0 ? startLine->price : endLine->price;
 }
 int NetworkBus::isOpen() const {
-	return m_dir ==0 ? startLine.isOpen : endLine.isOpen;
+	return m_dir ==0 ? startLine->isOpen : endLine->isOpen;
 }
 int NetworkBus::dir()const{
 	return 0;
 }
 QString NetworkBus::to_station_one()const{
-	return startLine.end_station;
+	return startLine->end_station;
 }
 QString NetworkBus::to_station_two() const {
-	return endLine.end_station;
+	return endLine->end_station;
 }
 QString NetworkBus::all_station() const{
 	return m_all_station;
+}
+bb::cascades::GroupDataModel* NetworkBus::dataModel() const{
+	return m_dataModel;
 }

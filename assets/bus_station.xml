@@ -1,0 +1,30 @@
+<model>
+  <header title="header0">
+    <item title="title0" />
+    <item title="title1" />
+  </header>
+  <header title="header1">
+    <item title="华南城" image="asset:///images/ic_location.png"/>
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+    <item title="title2" />
+    <item title="title3" />
+  </header>
+  <header title="header2">
+    <item title="title4" />
+    <item title="title5" />
+  </header>
+</model>

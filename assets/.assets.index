@@ -1,6 +1,8 @@
 1
-4
+6
+bus_station.xml
 images/ic_location.png
 images/ic_previous.png
 main.qml
 resultPage.qml
+test.qml

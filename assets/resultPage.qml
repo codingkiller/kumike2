@@ -13,6 +13,7 @@ Page {
                 horizontalAlignment: HorizontalAlignment.Center
                 topPadding: 20
                 Label {
+                    id: secondtitlebarcontainerlabel
                 	text : !networkBus.line_name ? qsTr("查询结果") : networkBus.line_name;
                     textStyle {
                         color: Color.White
@@ -23,7 +24,10 @@ Page {
                     layoutProperties: StackLayoutProperties { spaceQuota: 1 }
                     onTextChanged: {
                         myIndicator.stop();
+                        thirdContainer.visible = true;
+                        
                     }
+                    
                 }
                 }
         }
@@ -55,21 +59,53 @@ Page {
                 //   visible: true
                 //   accessibility.name: "TODO: Add property content"
             }
+            ActivityIndicator {
+                id: myIndicator
+                minHeight: 600
+            }
         }
         
         
         Container {
-            layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
+            id: thirdContainer
+            layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
             topPadding: 20
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
             minHeight: 820
-            ActivityIndicator {
-                id: myIndicator
-                minHeight: 600                
-            }
-            TextArea {
+            visible: false
+            /*TextArea {
                 text: networkBus.all_station
+            }*/
+            ListView {
+                dataModel: networkBus.dataModel
+                
+            //    rootIndexPath: [1]
+                //   rotationZ: 90
+                layout: StackListLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                onCreationCompleted: {
+                 //   console.log("\ndataModel.size:"+networkBus.dataModel[0].toString());
+                }
+                listItemComponents: [
+                    ListItemComponent {
+                    //    type: "item"
+                        Container {
+                            layout: StackLayout {
+                                orientation: LayoutOrientation.LeftToRight
+                            }
+//                            ImageView {
+//                                imageSource: ListItemData.image
+//                            }
+                            TextArea {
+                                maxWidth: 80
+                                text: ListItemData.name
+                            }
+                        }
+                    }
+
+                ]
             }
         }
         Container {
@@ -84,13 +120,14 @@ Page {
         }
     }
 
-//    attachedObjects: [
-//        NetworkBus {
-//            id: networkBus
-//        
-//        }
-//    ]
+    /*attachedObjects: [
+        NetworkBus {
+            id: networkBus
+        
+        }
+    ]*/
     onCreationCompleted: {
+     //   secondtitlebarcontainerlabel.text = qsTr("查询结果");
         myIndicator.start();
         
         console.log("resultpage.qml:endstation:"+networkBus.end_station);
