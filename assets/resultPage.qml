@@ -1,4 +1,5 @@
 import bb.cascades 1.0
+import bb.data 1.0
 import NetworkBus 1.0
 
 Page {
@@ -25,7 +26,7 @@ Page {
                     onTextChanged: {
                         myIndicator.stop();
                         thirdContainer.visible = true;
-                        
+                     //   console.log("size: "+networkBus.dataModel.size());
                     }
                     
                 }
@@ -79,7 +80,6 @@ Page {
             }*/
             ListView {
                 dataModel: networkBus.dataModel
-                
             //    rootIndexPath: [1]
                 //   rotationZ: 90
                 layout: StackListLayout {
@@ -90,7 +90,7 @@ Page {
                 }
                 listItemComponents: [
                     ListItemComponent {
-                    //    type: "item"
+                      //  type: "listItem"
                         Container {
                             layout: StackLayout {
                                 orientation: LayoutOrientation.LeftToRight
@@ -100,12 +100,25 @@ Page {
 //                            }
                             TextArea {
                                 maxWidth: 80
-                                text: ListItemData.name
+                                text: ListItemData.name.toString()
                             }
                         }
                     }
 
                 ]
+//                listItemComponents: [
+//                    ListItemComponent {
+//                        type: "listItem"
+//                        StandardListItem {
+//                            title: ListItemData.name
+//                            description: ListItemData.code
+//                        }
+//                    }
+//                ]
+//                
+//                function itemType(data, indexPath) {
+//                    return "listItem";
+//                }
             }
         }
         Container {

@@ -4,24 +4,24 @@ BASEDIR =  $$quote($$_PRO_FILE_PWD_)
 device {
     CONFIG(debug, debug|release) {
         SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
-                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)
     }
 
     CONFIG(release, debug|release) {
         SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
-                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)
     }
@@ -30,12 +30,12 @@ device {
 simulator {
     CONFIG(debug, debug|release) {
         SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
-                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+                 $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)
     }

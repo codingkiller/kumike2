@@ -2,10 +2,13 @@
 #define Network_BUS_
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QMap>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <bb/cascades/GroupDataModel>
+#include <bb/cascades/QListDataModel>
+
 #include "busline.hpp"
 #include "station.hpp"
 using namespace bb::cascades;
@@ -33,9 +36,10 @@ class NetworkBus : public QObject{
 		int m_dir;
 		busline *startLine;
 		busline *endLine;
-		GroupDataModel *m_dataModel;
-		QList<station> *startStation;
-		QList<station> *endStation;
+		QListDataModel<station*>* m_dataModel;
+	//	GroupDataModel *m_dataModel;
+	//	QList<station> *startStation;
+	//	QList<station> *endStation;
 		void get_subline_inf(const QString sid);
 		void init(){
 			m_buslineText = "";
@@ -44,11 +48,12 @@ class NetworkBus : public QObject{
 			city_id = "";
 			startLine = new busline;
 			endLine = new busline;
-			startStation = new QList<station>;
-			endStation = new QList<station>;
-			m_dataModel = new GroupDataModel(QStringList() << "id" << "name" << "code" << "lat" << "lng");
-			m_dataModel->setGrouping(ItemGrouping::ByFirstChar);
-			emit buslineChanged();
+		//	startStation = new QList<station>;
+		//	endStation = new QList<station>;
+			m_dataModel = new QListDataModel<station*>();
+		//	m_dataModel = new GroupDataModel(QStringList() << "id" << "name" << "code" << "lat" << "lng");
+		//	m_dataModel->setGrouping(ItemGrouping::ByFirstChar);
+		//	emit buslineChanged();
 		}
 
 	public Q_SLOTS:
@@ -74,7 +79,7 @@ class NetworkBus : public QObject{
 		QString to_station_one() const;
 		QString to_station_two() const;
 		QString all_station() const;
-		bb::cascades::GroupDataModel *dataModel() const;
+		QListDataModel<station*> *dataModel() const;
 		Q_SIGNALS:
 			void buslineChanged();
 			void stationChanged();

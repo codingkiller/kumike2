@@ -6,6 +6,9 @@ class station :public QObject{
     // These are the properties that will be accessible by the datamodel in the view.
     Q_PROPERTY(QString code READ code NOTIFY codeChanged)
 	Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+	Q_PROPERTY(QString lat READ lat NOTIFY nameChanged)
+	Q_PROPERTY(QString lng READ lng NOTIFY nameChanged)
+	Q_PROPERTY(QString id READ id NOTIFY nameChanged)
 
 private :
 	QString m_code;

@@ -17,6 +17,7 @@
 import bb.cascades 1.0
 import NetworkBus 1.0
 import bb.system 1.0
+import bb.data 1.0
 NavigationPane {
     id: navigationPane
 

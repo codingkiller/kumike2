@@ -59,8 +59,8 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 		qDebug() << "here we go1\n";
 		qDebug() << stations;
 		QString result = "";
-		startStation = new QList<station>;
-		endStation = new QList<station>;
+	//	startStation = new QList<station>;
+	//	endStation = new QList<station>;
 		m_all_station = "";
 		for(int i=0;i<stations.length();i++){
 			const QVariantMap var = stations.at(i).toMap();
@@ -72,14 +72,15 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 			sta->setName(var["name"].toString());
 			m_all_station += sta->name();
 	//		Q_UNUSED(sta);
-	//		m_dataModel->append(sta);
-			QVariantMap map;
-			map["id"] = var["id"].toString();
-			map["name"] = var["name"].toString();
-			map["code"] = var["code"].toString();
-			map["lat"] = var["lat"].toString();
-			map["lng"] = var["lng"].toString();
-			m_dataModel->insert(map);
+			m_dataModel->append(sta);
+
+//			QVariantMap map;
+//			map["id"] = var["id"].toString();
+//			map["name"] = var["name"].toString();
+//			map["code"] = var["code"].toString();
+//			map["lat"] = var["lat"].toString();
+//			map["lng"] = var["lng"].toString();
+//			m_dataModel->insert(map);
 		//	break;
 		//	if(m_dir == 0)
 	//			startStation->append(*sta);
@@ -202,6 +203,6 @@ QString NetworkBus::to_station_two() const {
 QString NetworkBus::all_station() const{
 	return m_all_station;
 }
-bb::cascades::GroupDataModel* NetworkBus::dataModel() const{
+bb::cascades::QListDataModel<station*>* NetworkBus::dataModel() const{
 	return m_dataModel;
 }
