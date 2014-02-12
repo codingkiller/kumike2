@@ -34,6 +34,7 @@ void myMessageOutput(QtMsgType type, const char* msg) {
 Q_DECL_EXPORT int main(int argc, char **argv)
 {
 	qmlRegisterType<NetworkBus>("NetworkBus", 1, 0, "NetworkBus");
+	qmlRegisterType<station>("station", 1, 0, "station");
     Application app(argc, argv);
     qInstallMsgHandler(myMessageOutput);
 

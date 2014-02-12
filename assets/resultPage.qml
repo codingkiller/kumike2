@@ -1,6 +1,5 @@
 import bb.cascades 1.0
 import bb.data 1.0
-import NetworkBus 1.0
 
 Page {
     id: secondPage
@@ -15,24 +14,16 @@ Page {
                 topPadding: 20
                 Label {
                     id: secondtitlebarcontainerlabel
-                	text : !networkBus.line_name ? qsTr("查询结果") : networkBus.line_name;
+                	text : networkBus.process ? qsTr("查询中 ") : networkBus.line_name;
                     textStyle {
                         color: Color.White
                         fontSize: FontSize.XLarge
-                      //  textAlign: TextAlign.Right
                     }
                     horizontalAlignment: HorizontalAlignment.Center
                     layoutProperties: StackLayoutProperties { spaceQuota: 1 }
-                    onTextChanged: {
-                        myIndicator.stop();
-                        thirdContainer.visible = true;
-                     //   console.log("size: "+networkBus.dataModel.size());
-                    }
-                    
                 }
                 }
         }
-     //   title: networkBus.line_name ? qsTr("查询结果") : networkBus.line_name;
     }
     Container {
         Container {
@@ -51,22 +42,23 @@ Page {
                     value: 1
                     text: "开往"+networkBus.to_station_two
                 }
-                //  accessibility.name: "TODO: Add property content"
                 onSelectedIndexChanged: {
-                    networkBus.changeBusLine(selectedValue)
+                    networkBus.changeBusLine(selectedValue);
                 }
             }
             Divider {
-                //   visible: true
-                //   accessibility.name: "TODO: Add property content"
             }
+            
             ActivityIndicator {
                 id: myIndicator
                 minHeight: 600
+                minWidth: 768
+                visible: networkBus.process
+                onVisibleChanged: {
+                    myIndicator.visible ? myIndicator.start() : myIndicator.stop();
+                }
             }
         }
-        
-        
         Container {
             id: thirdContainer
             layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
@@ -74,51 +66,29 @@ Page {
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
             minHeight: 820
-            visible: false
-            /*TextArea {
-                text: networkBus.all_station
-            }*/
             ListView {
+                id: stationListView
+                visible: !networkBus.process
                 dataModel: networkBus.dataModel
-            //    rootIndexPath: [1]
-                //   rotationZ: 90
                 layout: StackListLayout {
                     orientation: LayoutOrientation.LeftToRight
                 }
-                onCreationCompleted: {
-                 //   console.log("\ndataModel.size:"+networkBus.dataModel[0].toString());
-                }
                 listItemComponents: [
                     ListItemComponent {
-                      //  type: "listItem"
                         Container {
+                            rightPadding: 50
                             layout: StackLayout {
                                 orientation: LayoutOrientation.LeftToRight
                             }
-//                            ImageView {
-//                                imageSource: ListItemData.image
-//                            }
                             TextArea {
                                 maxWidth: 80
-                                text: ListItemData.name.toString()
+                                text: ListItemData.name
+                                editable: false
                             }
                         }
                     }
 
                 ]
-//                listItemComponents: [
-//                    ListItemComponent {
-//                        type: "listItem"
-//                        StandardListItem {
-//                            title: ListItemData.name
-//                            description: ListItemData.code
-//                        }
-//                    }
-//                ]
-//                
-//                function itemType(data, indexPath) {
-//                    return "listItem";
-//                }
             }
         }
         Container {
@@ -132,17 +102,8 @@ Page {
         
         }
     }
-
-    /*attachedObjects: [
-        NetworkBus {
-            id: networkBus
-        
-        }
-    ]*/
     onCreationCompleted: {
-     //   secondtitlebarcontainerlabel.text = qsTr("查询结果");
-        myIndicator.start();
-        
+        networkBus.process ? myIndicator.start() : myIndicator.stop();
         console.log("resultpage.qml:endstation:"+networkBus.end_station);
     }
     

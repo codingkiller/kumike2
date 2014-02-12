@@ -8,18 +8,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>酷米客公交 </source>
+        <source>閰风背瀹㈠叕浜</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>请输入实时公交线路 </source>
+        <source>璇疯緭鍏ュ疄鏃跺叕浜ょ嚎璺</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>resultPage</name>
     <message>
-        <source>查询结果</source>
+        <source>鏌ヨ涓</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

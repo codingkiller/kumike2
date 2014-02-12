@@ -26,8 +26,6 @@ void NetworkBus::get_subline_inf(const QString sid){
 	m_all_station = subline_inf_url + sid;
 	request.setUrl(QUrl(subline_inf_url+sid));
 	std::cout << "m_all_station::" << m_all_station.toStdString();
-//	printf("m_all_station::%s",m_all_station);
-//	qDebug() << m_all_station ;
 	pNetworkAccessManager->get(request);
 }
 
@@ -46,22 +44,20 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 		if(success != "true" || msg != "ok"){
 			m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
 			emit buslineChanged();
+			this->setProcess(false);
+				emit processChanged();
 			return;
 		}
 		const QVariantMap data = map["data"].toMap();
-		m_all_station = map["data"].toString();
 		const QVariantList stations = data["stations"].toList();
 		if(stations.isEmpty() || stations.length() == 0){
 			m_buslineText = QString::fromUtf8("未查询到线路数据！");
 			emit buslineChanged();
+			this->setProcess(false);
+				emit processChanged();
 			return ;
 		}
-		qDebug() << "here we go1\n";
-		qDebug() << stations;
-		QString result = "";
-	//	startStation = new QList<station>;
-	//	endStation = new QList<station>;
-		m_all_station = "";
+		m_dataModel->clear();
 		for(int i=0;i<stations.length();i++){
 			const QVariantMap var = stations.at(i).toMap();
 			station *sta = new station();
@@ -70,32 +66,22 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 			sta->setLat(var["lat"].toString());
 			sta->setLng(var["lng"].toString());
 			sta->setName(var["name"].toString());
-			m_all_station += sta->name();
-	//		Q_UNUSED(sta);
-			m_dataModel->append(sta);
-
-//			QVariantMap map;
-//			map["id"] = var["id"].toString();
-//			map["name"] = var["name"].toString();
-//			map["code"] = var["code"].toString();
-//			map["lat"] = var["lat"].toString();
-//			map["lng"] = var["lng"].toString();
-//			m_dataModel->insert(map);
-		//	break;
-		//	if(m_dir == 0)
-	//			startStation->append(*sta);
-	//		else endStation->append(*sta);
+			if(m_dir == 0)
+				startStation->append(sta);
+			else endStation->append(sta);
 
 		}
+		m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
 	}
 	qDebug() << "\nm_dataModel size :"<<m_dataModel->size() << "\n";
-//	qDebug() << "\nm_dataModel :"<<m_dataModel->value(1)->name() << "\n";
-//	qDebug() << "\nm_dataModel :"<<m_dataModel->value(2)->name() << "\n";
-//	emit stationChanged();
+	this->setProcess(false);
+		emit processChanged();
 	emit buslineChanged();
 }
 void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name){
 	init();
+	this->setProcess(true);
+		emit processChanged();
 	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
 	bool result;
 	Q_UNUSED(result);
@@ -106,8 +92,18 @@ void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name
 	pNetworkAccessManager->get(request);
 }
 void NetworkBus::changeBusLine(int m_dir){
+	if(this->m_dir == m_dir)
+		return ;
 	this->m_dir = m_dir;
-	emit buslineChanged();
+	if(startStation->length() > 0 && endStation->length() > 0){
+		m_dataModel->clear();
+		m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
+		return;
+	}
+	this->setProcess(true);
+	emit processChanged();
+	this->get_subline_inf(this->getSid());
+//	emit buslineChanged();
 }
 
 //! [1]
@@ -124,6 +120,8 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 		const QString success = map.values("success").value(0).toString();
 		if(success != "true" || msg != "ok"){
 			m_buslineText = QString::fromUtf8("网络访问出错，请检查网络后重试！");
+			this->setProcess(true);
+			emit processChanged();
 			emit buslineChanged();
 			return;
 		}
@@ -132,6 +130,8 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 		const QVariantList data = map["data"].toList();
 		if(data.isEmpty() || data.length() == 0){
 			m_buslineText = QString::fromUtf8("未查询到该趟公交车数据！");
+			this->setProcess(true);
+			emit processChanged();
 			emit buslineChanged();
 			return ;
 		}

@@ -28,6 +28,7 @@ class NetworkBus : public QObject{
     Q_PROPERTY(QString to_station_two READ to_station_two NOTIFY buslineChanged)
     Q_PROPERTY(QString all_station READ all_station NOTIFY buslineChanged)
     Q_PROPERTY(bb::cascades::DataModel* dataModel READ dataModel  NOTIFY buslineChanged)
+    Q_PROPERTY(bool process READ isProcess NOTIFY processChanged)
 
 	private:
 		QString city_id;
@@ -36,24 +37,29 @@ class NetworkBus : public QObject{
 		int m_dir;
 		busline *startLine;
 		busline *endLine;
+		bool m_process;
 		QListDataModel<station*>* m_dataModel;
 	//	GroupDataModel *m_dataModel;
-	//	QList<station> *startStation;
-	//	QList<station> *endStation;
+		QList<station*> *startStation;
+		QList<station*> *endStation;
 		void get_subline_inf(const QString sid);
 		void init(){
 			m_buslineText = "";
 			m_all_station = "";
 			m_dir = 0;
+			m_process = false;
 			city_id = "";
 			startLine = new busline;
 			endLine = new busline;
-		//	startStation = new QList<station>;
-		//	endStation = new QList<station>;
+			startStation = new QList<station*>;
+			endStation = new QList<station*>;
 			m_dataModel = new QListDataModel<station*>();
 		//	m_dataModel = new GroupDataModel(QStringList() << "id" << "name" << "code" << "lat" << "lng");
 		//	m_dataModel->setGrouping(ItemGrouping::ByFirstChar);
 		//	emit buslineChanged();
+		}
+		QString getSid(){
+			return m_dir == 0 ? startLine->id : endLine->id;
 		}
 
 	public Q_SLOTS:
@@ -80,9 +86,19 @@ class NetworkBus : public QObject{
 		QString to_station_two() const;
 		QString all_station() const;
 		QListDataModel<station*> *dataModel() const;
-		Q_SIGNALS:
+
+	bool isProcess() const {
+		return m_process;
+	}
+
+	void setProcess(bool process) {
+		m_process = process;
+	}
+
+Q_SIGNALS:
 			void buslineChanged();
 			void stationChanged();
+			void processChanged();
 
 };
 const static QString busurl = "http://busi.gpsoo.net/v1/bus/get_lines_by_city?type=handset";
