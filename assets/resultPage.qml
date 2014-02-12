@@ -31,7 +31,12 @@ Page {
             topPadding: 20
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
-            
+            Label {
+                id: errorInfo
+                text: networkBus.error
+                visible:networkBus.error
+            }
+
             SegmentedControl {
                 id: selectLine
                 Option {
@@ -76,16 +81,26 @@ Page {
                 listItemComponents: [
                     ListItemComponent {
                         Container {
-                            rightPadding: 50
-                            layout: StackLayout {
-                                orientation: LayoutOrientation.LeftToRight
+                            Container {
+                                Label {
+                                    text: "text"
+                                }
                             }
-                            TextArea {
-                                maxWidth: 80
-                                text: ListItemData.name
-                                editable: false
+                            Container {
+                                rightPadding: 50
+                                layout: StackLayout {
+                                    orientation: LayoutOrientation.LeftToRight
+                                }
+                                TextArea {
+                                    maxWidth: 82
+                                    text: ListItemData.name
+                                    editable: false
+                                    horizontalAlignment: HorizontalAlignment.Left
+                                    verticalAlignment: VerticalAlignment.Top
+                                }
                             }
                         }
+                        
                     }
 
                 ]

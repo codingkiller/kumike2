@@ -26,8 +26,10 @@ Page {
                             imageSource: ListItemData.image
                         }
                         TextArea {
-                            maxWidth: 80
+                            maxWidth: 82
                             text: ListItemData.title
+                            horizontalAlignment: HorizontalAlignment.Left
+                            verticalAlignment: VerticalAlignment.Top
                         }
                     }
                 }

@@ -8,7 +8,8 @@ device {
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
-        HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+        HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)
@@ -20,7 +21,8 @@ device {
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
-        HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+        HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)
@@ -34,7 +36,8 @@ simulator {
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
-        HEADERS +=  $$quote($$BASEDIR/src/applicationui.hpp) \
+        HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
                  $$quote($$BASEDIR/src/station.hpp)

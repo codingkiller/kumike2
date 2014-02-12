@@ -35,6 +35,7 @@ Q_DECL_EXPORT int main(int argc, char **argv)
 {
 	qmlRegisterType<NetworkBus>("NetworkBus", 1, 0, "NetworkBus");
 	qmlRegisterType<station>("station", 1, 0, "station");
+	qmlRegisterType<station>("BusGps", 1, 0, "BusGps");
     Application app(argc, argv);
     qInstallMsgHandler(myMessageOutput);
 

@@ -19,6 +19,7 @@ import NetworkBus 1.0
 import bb.system 1.0
 import bb.data 1.0
 import station 1.0
+import BusGps 1.0
 NavigationPane {
     id: navigationPane
 
@@ -152,10 +153,6 @@ Page {
         }
         layout: StackLayout {
             orientation: LayoutOrientation.LeftToRight
-        }
-        Label {
-            id: errorInfo
-            text: networkBus.buslineText
         }
     }
         
