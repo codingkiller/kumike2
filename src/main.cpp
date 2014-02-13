@@ -20,6 +20,7 @@
 #include <QTranslator>
 #include "applicationui.hpp"
 #include "network.hpp"
+#include "DBService.hpp"
 #include <Qt/qdeclarativedebug.h>
 #include <bb/cascades/QmlDocument>
 
@@ -35,7 +36,10 @@ Q_DECL_EXPORT int main(int argc, char **argv)
 {
 	qmlRegisterType<NetworkBus>("NetworkBus", 1, 0, "NetworkBus");
 	qmlRegisterType<station>("station", 1, 0, "station");
-	qmlRegisterType<station>("BusGps", 1, 0, "BusGps");
+	qmlRegisterType<DBService>("dbservice", 1, 0, "dbservice");
+	qmlRegisterType<busline>("busline", 1, 0, "busline");
+
+//	qmlRegisterType<BusGps>("BusGps", 1, 0, "BusGps");
     Application app(argc, argv);
     qInstallMsgHandler(myMessageOutput);
 

@@ -52,6 +52,7 @@ Page {
                 }
             }
             Divider {
+                
             }
             
             ActivityIndicator {
@@ -78,24 +79,50 @@ Page {
                 layout: StackListLayout {
                     orientation: LayoutOrientation.LeftToRight
                 }
+                topPadding: 0
                 listItemComponents: [
                     ListItemComponent {
                         Container {
+                            layout: StackLayout {
+                                orientation: LayoutOrientation.TopToBottom
+                            }
+                            minWidth: 120
                             Container {
+                                minWidth: 120
+                                bottomPadding: 0
+                                verticalAlignment: VerticalAlignment.Bottom
+                                layout: StackLayout {
+                                    orientation: LayoutOrientation.LeftToRight
+                                }
                                 Label {
-                                    text: "text"
+                                    maxHeight: 3
+                                    minWidth: ListItemData.bus_state == "cur_station" ? 0 : 50
+                                }
+                                ImageView {
+                                    imageSource: "asset:///images/ic_bus_enable.jpg"
+                                    visible: ListItemData.bus_state
                                 }
                             }
+                            Divider {
+                                minWidth: 120
+                                maxWidth: 120
+                                minHeight: 1
+                                maxHeight: 2
+                            }
                             Container {
-                                rightPadding: 50
+                                minWidth: 120
+                                topPadding: 0
+                                horizontalAlignment: HorizontalAlignment.Left
+                                verticalAlignment: VerticalAlignment.Top
                                 layout: StackLayout {
                                     orientation: LayoutOrientation.LeftToRight
                                 }
                                 TextArea {
-                                    maxWidth: 82
-                                    text: ListItemData.name
+                                    topPadding: 0
+                                    maxWidth: 80
+                                    text: ListItemData.name.toString()
                                     editable: false
-                                    horizontalAlignment: HorizontalAlignment.Left
+                                    horizontalAlignment: HorizontalAlignment.Center
                                     verticalAlignment: VerticalAlignment.Top
                                 }
                             }

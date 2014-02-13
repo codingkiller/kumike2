@@ -9,6 +9,8 @@ class station :public QObject{
 	Q_PROPERTY(QString lat READ lat NOTIFY nameChanged)
 	Q_PROPERTY(QString lng READ lng NOTIFY nameChanged)
 	Q_PROPERTY(QString id READ id NOTIFY nameChanged)
+	Q_PROPERTY(QString index READ index NOTIFY nameChanged)
+	Q_PROPERTY(QString bus_state READ bus_state NOTIFY nameChanged)
 
 private :
 	QString m_code;
@@ -16,6 +18,8 @@ private :
 	QString m_lng;
 	QString m_name;
 	QString m_id;
+	QString m_index;
+	QString m_bus_state;
 
 public:
 /*	~station(){}
@@ -42,6 +46,8 @@ public:
 	void setLng(const QString& lng);
 
 	void setName(const QString& name);
+	void setIndex(const QString& index);
+	void setBusState(const QString& bus_state);
 
 	const QString& code() const;
 
@@ -52,9 +58,12 @@ public:
 	const QString& lng() const;
 
 	const QString& name() const;
+	const QString& index() const;
+	const QString& bus_state() const;
 	Q_SIGNALS:
 		void codeChanged();
 		void nameChanged();
+		void busstateChanged();
 };
 Q_DECLARE_METATYPE(station*)
 #endif

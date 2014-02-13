@@ -3,12 +3,14 @@ BASEDIR =  $$quote($$_PRO_FILE_PWD_)
 
 device {
     CONFIG(debug, debug|release) {
-        SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
+        SOURCES +=  $$quote($$BASEDIR/src/DBService.cpp) \
+                 $$quote($$BASEDIR/src/applicationui.cpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/DBService.hpp) \
                  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
@@ -16,12 +18,14 @@ device {
     }
 
     CONFIG(release, debug|release) {
-        SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
+        SOURCES +=  $$quote($$BASEDIR/src/DBService.cpp) \
+                 $$quote($$BASEDIR/src/applicationui.cpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/DBService.hpp) \
                  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \
@@ -31,12 +35,14 @@ device {
 
 simulator {
     CONFIG(debug, debug|release) {
-        SOURCES +=  $$quote($$BASEDIR/src/applicationui.cpp) \
+        SOURCES +=  $$quote($$BASEDIR/src/DBService.cpp) \
+                 $$quote($$BASEDIR/src/applicationui.cpp) \
                  $$quote($$BASEDIR/src/main.cpp) \
                  $$quote($$BASEDIR/src/network.cpp) \
                  $$quote($$BASEDIR/src/station.cpp)
 
         HEADERS +=  $$quote($$BASEDIR/src/BusGps.hpp) \
+                 $$quote($$BASEDIR/src/DBService.hpp) \
                  $$quote($$BASEDIR/src/applicationui.hpp) \
                  $$quote($$BASEDIR/src/busline.hpp) \
                  $$quote($$BASEDIR/src/network.hpp) \

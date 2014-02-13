@@ -29,7 +29,7 @@ class NetworkBus : public QObject{
     Q_PROPERTY(QString to_station_two READ to_station_two NOTIFY buslineChanged)
  //   Q_PROPERTY(QString all_station READ all_station NOTIFY buslineChanged)
     Q_PROPERTY(bb::cascades::DataModel* dataModel READ dataModel  NOTIFY dataModelChanged)
-    Q_PROPERTY(bb::cascades::DataModel* gpsDataModel READ gpsDataModel  NOTIFY gpsDataModelChanged)
+//    Q_PROPERTY(bb::cascades::DataModel* gpsDataModel READ gpsDataModel  NOTIFY gpsDataModelChanged)
     Q_PROPERTY(bool process READ isProcess NOTIFY processChanged)
 
 	private:
@@ -43,7 +43,7 @@ class NetworkBus : public QObject{
 		busline *endLine;
 		bool m_process;
 		QListDataModel<station*>* m_dataModel;
-		QListDataModel<BusGps*>* m_gpsDataModel;
+//		QListDataModel<BusGps*>* m_gpsDataModel;
 	//	GroupDataModel *m_dataModel;
 		QList<station*> *startStation;
 		QList<station*> *endStation;
@@ -68,12 +68,13 @@ class NetworkBus : public QObject{
 			startStation = new QList<station*>;
 			endStation = new QList<station*>;
 			m_dataModel = new QListDataModel<station*>();
+	//		m_gpsDataModel = new QListDataModel<BusGps*>();
 		//	m_dataModel = new GroupDataModel(QStringList() << "id" << "name" << "code" << "lat" << "lng");
 		//	m_dataModel->setGrouping(ItemGrouping::ByFirstChar);
 		//	emit buslineChanged();
 		}
 		QString getSid(){
-			return m_dir == 0 ? startLine->id : endLine->id;
+			return m_dir == 0 ? startLine->getId() : endLine->getId();
 		}
 		QString city_id(){
 			return m_city_id;
@@ -106,10 +107,10 @@ class NetworkBus : public QObject{
 		QString to_station_two() const;
 	//	QString all_station() const;
 		QString subline_id() const{
-			return m_dir == 0 ? startLine->id : endLine->id;
+			return m_dir == 0 ? startLine->getId() : endLine->getId();
 		}
 		QListDataModel<station*> *dataModel() const;
-		QListDataModel<BusGps*> *gpsDataModel() const;
+//		QListDataModel<BusGps*> *gpsDataModel() const;
 
 	bool isProcess() const {
 		return m_process;
@@ -125,7 +126,8 @@ Q_SIGNALS:
 			void processChanged();
 			void dataModelChanged();
 			void errorChanged();
-			void gpsDataModelChanged();
+//			void gpsDataModelChanged();
+			void busstateChanged();
 
 };
 const static QString get_lines_by_city_url = "http://busi.gpsoo.net/v1/bus/get_lines_by_city?type=handset&city_id=";

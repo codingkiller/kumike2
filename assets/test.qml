@@ -11,19 +11,19 @@ Page {
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "header"
-                    Label {
-                        text: ListItemData.title
-                    }
-                },
-                ListItemComponent {
+                    id: listitem
                     type: "item"
                     Container {
+                        leftPadding: ListItem.indexPath
                         layout: StackLayout {
                             orientation: LayoutOrientation.LeftToRight
                         }
+        
                         ImageView {
                             imageSource: ListItemData.image
+                        }
+                        Label {
+                            text: listitem.ListItem.indexPath
                         }
                         TextArea {
                             maxWidth: 82

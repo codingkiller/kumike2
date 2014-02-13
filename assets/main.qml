@@ -19,7 +19,7 @@ import NetworkBus 1.0
 import bb.system 1.0
 import bb.data 1.0
 import station 1.0
-import BusGps 1.0
+//import BusGps 1.0
 NavigationPane {
     id: navigationPane
 
@@ -57,9 +57,9 @@ Page {
                         color: Color.White
                     }
                     verticalAlignment:VerticalAlignment.Center
-                    topPadding: 50
-                    bottomPadding: 0
-                    rightPadding: 0
+                //    topPadding: 50
+                //    bottomPadding: 0
+                 //   rightPadding: 0
                     maxWidth: 74
                     attachedObjects: [
                         SystemListDialog{
@@ -70,8 +70,8 @@ Page {
                             selectionMode: ListSelectionMode.Single
                             confirmButton.label: "确定"
                             cancelButton.label: "取消"
-                            includeRememberMe: true
-                            rememberMeChecked: true
+                         //   includeRememberMe: true
+                         //   rememberMeChecked: true
                             
                             onFinished: {
                                 if(listDialog.result == SystemUiResult.CancelButtonSelection){
@@ -121,7 +121,7 @@ Page {
     
     Container {
         id: secondContainer
-        background: Color.Blue
+     //   background: Color.Blue
     //    maxHeight: 500
      //   topPadding: 300
     //    topMargin: 300
@@ -158,25 +158,21 @@ Page {
         
     
     Container {
-        background: Color.Cyan
+   //     background: Color.Cyan
       //  verticalAlignment: VerticalAlignment.Bottom
     //    bottomPadding: 0
      //   visible: true
         leftPadding: 50
         rightPadding: 50
+        
         Label {
             text: "常用线路"
             textStyle{
                 textAlign: TextAlign.Center
             }
         }
-
-            Divider {
-
-            }
-            Label {
-            id: timeInfo
-            text: "起止时间"
+        Divider {
+        
         }
     }
     

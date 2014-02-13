@@ -35,27 +35,32 @@ void NetworkBus::get_online_gps_finished(QNetworkReply* reply){
 			onError();
 			return ;
 		}
-		//m_dataModel->clear();
-		for(int i=0;i<records.length();i++){
-			const QStringList var = records.at(i).toStringList();
-			qDebug() << "qstringlist : next_station 17 :" << var[17] ;
-			const QString id = var[0];
-			const QString cur_station_state = var[19];
-			if(cur_station_state == "2"){//1当前站点正中央
-				//在站点之间
+		for(int i=0;i<m_dataModel->size()-1;i++){
+
+			for(int j = 0 ; j < records.length();j++){
+				const QStringList var = records.at(j).toStringList();
+				const QString cur_station_state = var[19];
+				const QString next_station = var[17];
+				const QString cur_station = var[18];
+				const QString subline_ids = var[20];
+				if(subline_id() != subline_ids) continue;
+			//	float leftPadding = 0;
+				if(cur_station == m_dataModel->value(i)->name() && next_station == m_dataModel->value(i+1)->name()){
+					if(cur_station_state != "2"){//显示在站点
+						m_dataModel->value(i)->setBusState("cur_station");
+					}
+					else{//显示正中间
+						m_dataModel->value(i)->setBusState("middle");
+					}
+				}
 			}
-			const QString next_station = var[17];
-			const QString cur_station = var[18];
-			BusGps* busgps = new BusGps;
-			busgps->setCurStation(cur_station);
-			busgps->setNextStation(next_station);
-			busgps->setCurStationState(cur_station_state);
 		}
 	//	m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
 	}
 //	qDebug() << "\nm_dataModel size :"<<m_dataModel->size() << "\n";
 	setProcess(false);
 	emit processChanged();
+	emit busstateChanged();
 //	this->get_lineisopen();
 }
 void NetworkBus::get_subline_inf(const QString sid){
@@ -105,10 +110,11 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 			sta->setId(var["id"].toString());
 			sta->setLat(var["lat"].toString());
 			sta->setLng(var["lng"].toString());
-			QString name = QString::number(i+1) ;
-			name.append(var["name"].toString());
-			qDebug() << "name string : " << name ;
-			sta->setName(name);
+		//	QString name = QString::number(i+1) ;
+		//	name.append(var["name"].toString());
+			sta->setIndex(QString::number(i+1));
+		//	qDebug() << "name string : " << name ;
+			sta->setName(var["name"].toString());
 			if(m_dir == 0)
 				startStation->append(sta);
 			else endStation->append(sta);
@@ -177,6 +183,9 @@ void NetworkBus::changeBusLine(int m_dir){
 	if(startStation->length() > 0 && endStation->length() > 0){
 		m_dataModel->clear();
 		m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
+		this->setProcess(true);
+		emit processChanged();
+		this->get_online_gps();
 		return;
 	}
 	this->setProcess(true);
@@ -216,20 +225,20 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 		for(int i=0;i<data.length();i++){
 			const QVariantMap iMap = data.at(i).toMap();
 			busline *bus = new busline;
-			bus->begin_time = iMap.value("begin_time").toString();
-			bus->end_time = iMap.value("end_time").toString();
-			bus->id = iMap.value("id").toString();
-			bus->start_station = iMap.value("start_station").toString();
-			bus->end_station = iMap.value("end_station").toString();
-			bus->price = iMap.value("price").toString();
-			bus->line_name = iMap.value("line_name").toString();
-			bus->isOpen = iMap.value("isopen").toInt();//1
-			bus->dir = iMap.value("dir").toInt();//0/1
+			bus->setBeginTime(iMap.value("begin_time").toString());
+			bus->setEndTime(iMap.value("end_time").toString());
+			bus->setId(iMap.value("id").toString());
+			bus->setStartStation(iMap.value("start_station").toString());
+			bus->setEndStation(iMap.value("end_station").toString());
+			bus->setPrice(iMap.value("price").toString());
+			bus->setLineName(iMap.value("line_name").toString());
+			bus->setIsOpen(iMap.value("isopen").toInt());//1
+			bus->setDir(iMap.value("dir").toInt());//0/1
 			if(i == 0)
 				startLine = bus;
 			else endLine = bus;
 		}
-		this->get_subline_inf(startLine->id);
+		this->get_subline_inf(startLine->getId());
 	}
 	emit buslineChanged();
 }
@@ -247,39 +256,39 @@ QString NetworkBus::error() const{
 	return m_error;
 }
 QString NetworkBus::line_name() const{
-	return m_dir == 0 ? startLine->line_name : endLine->line_name;
+	return m_dir == 0 ? startLine->getLineName() : endLine->getLineName();
 }
 QString NetworkBus::begin_time() const{
-	return m_dir ==0 ? startLine->begin_time : endLine->begin_time;
+	return m_dir ==0 ? startLine->getBeginTime() : endLine->getBeginTime();
 }
 QString NetworkBus::end_time() const{
-	return m_dir ==0 ? startLine->end_time : endLine->end_time;
+	return m_dir ==0 ? startLine->getEndTime() : endLine->getEndTime();
 }
 QString NetworkBus::start_station() const{
-	return m_dir ==0 ? startLine->start_station : endLine->start_station;
+	return m_dir ==0 ? startLine->getStartStation() : endLine->getStartStation();
 }
 QString NetworkBus::end_station() const{
-	return m_dir ==0 ? startLine->end_station : endLine->end_station;
+	return m_dir ==0 ? startLine->getEndStation() : endLine->getEndStation();
 }
 QString NetworkBus::price() const{
-	return m_dir ==0 ? startLine->price : endLine->price;
+	return m_dir ==0 ? startLine->getPrice() : endLine->getPrice();
 }
 int NetworkBus::isOpen() const {
-	return m_dir ==0 ? startLine->isOpen : endLine->isOpen;
+	return m_dir ==0 ? startLine->getIsOpen() : endLine->getIsOpen();
 }
 int NetworkBus::dir()const{
 	return 0;
 }
 QString NetworkBus::to_station_one()const{
-	return startLine->end_station;
+	return startLine->getEndStation();
 }
 QString NetworkBus::to_station_two() const {
-	return endLine->end_station;
+	return endLine->getEndStation();
 }
 
 bb::cascades::QListDataModel<station*>* NetworkBus::dataModel() const{
 	return m_dataModel;
 }
-bb::cascades::QListDataModel<BusGps*>* NetworkBus::gpsDataModel() const{
+/*bb::cascades::QListDataModel<BusGps*>* NetworkBus::gpsDataModel() const{
 	return m_gpsDataModel;
-}
+}*/
