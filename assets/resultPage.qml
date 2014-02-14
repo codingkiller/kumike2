@@ -101,6 +101,7 @@ Page {
                                 ImageView {
                                     imageSource: "asset:///images/ic_bus_enable.jpg"
                                     visible: ListItemData.bus_state
+                                    
                                 }
                             }
                             Divider {

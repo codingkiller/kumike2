@@ -8,10 +8,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Drop table error: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Create table error: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20,27 +16,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create record succeeded.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Create record error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Customer with id=%1 was updated.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>SQL error: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Customer with id=%1 was deleted.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The customer table is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -68,6 +48,10 @@
     </message>
     <message>
         <source>璇疯緭鍏ュ疄鏃跺叕浜ょ嚎璺</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>鏌ヨ</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

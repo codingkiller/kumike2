@@ -123,6 +123,7 @@ void NetworkBus::onSublineInfFinished(QNetworkReply* reply){
 	}
 	qDebug() << "\nm_dataModel size :"<<m_dataModel->size() << "\n";
 	emit dataModelChanged();
+	emit buslineChanged();
 	this->get_lineisopen();
 }
 void NetworkBus::get_lineisopen(){
@@ -162,7 +163,7 @@ void NetworkBus::onLineIsOpenFinished(QNetworkReply* reply){
 }
 
 void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name){
-	init();
+	//init();
 	this->setProcess(true);
 	emit processChanged();
 	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
@@ -175,12 +176,19 @@ void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name
 	request.setUrl(QUrl(get_lines_by_city_url+city_id+"&line_name="+line_name.toUpper()));
 	pNetworkAccessManager->get(request);
 }
-
+void NetworkBus::deleteRecord(const int record_id){
+		    	bool result = dbService->deleteRecord(record_id);
+		    	if(result){
+		    		qDebug() << "delete data record_id :" << record_id << " finished ";
+		    		emit localDataModelChanged();
+		    	}
+		    }
 void NetworkBus::changeBusLine(int m_dir){
 	if(this->m_dir == m_dir)
 		return ;
 	this->m_dir = m_dir;
 	if(startStation->length() > 0 && endStation->length() > 0){
+		emit buslineChanged();
 		m_dataModel->clear();
 		m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
 		this->setProcess(true);
@@ -234,8 +242,18 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 			bus->setLineName(iMap.value("line_name").toString());
 			bus->setIsOpen(iMap.value("isopen").toInt());//1
 			bus->setDir(iMap.value("dir").toInt());//0/1
-			if(i == 0)
+			bus->setCityId(m_city_id);
+			if(iMap.value("dir").toInt() == 0){
+				int record_id = dbService->findRecordId(m_city_id,bus->getLineName());
+				if(record_id != 0){
+					dbService->updateRecord(record_id);
+				}else{
+					dbService->createRecord(bus);
+				}
+				dbService->readRecords();
+				emit localDataModelChanged();
 				startLine = bus;
+			}
 			else endLine = bus;
 		}
 		this->get_subline_inf(startLine->getId());

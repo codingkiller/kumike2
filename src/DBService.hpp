@@ -39,6 +39,9 @@ public:
     Q_INVOKABLE void readRecords();
     Q_INVOKABLE bool updateRecord(const int record_id);
     Q_INVOKABLE bool deleteRecord(const int record_id);
+    Q_INVOKABLE int findRecordId(const QString city_id,const QString line_name);
+    DBService();
+    bb::cascades::QListDataModel<busline*>* dataModel() const;
 
 private:
     // Functions to call upon initialization to setup the model and database
@@ -49,7 +52,6 @@ private:
     void alert(const QString &message);
 
     // The getter method for the property
-    bb::cascades::QListDataModel<busline*>* dataModel() const;
 
     // The data shown by the list view.
     QListDataModel<busline*>* m_dataModel;

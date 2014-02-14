@@ -121,27 +121,32 @@ Page {
     
     Container {
         id: secondContainer
-     //   background: Color.Blue
-    //    maxHeight: 500
-     //   topPadding: 300
-    //    topMargin: 300
-    //	verticalAlignment: VerticalAlignment.Bottom
-        bottomPadding: 0
+        leftPadding: 50
+        rightPadding: 50
+        preferredWidth: 668
+        horizontalAlignment: HorizontalAlignment.Center
+
         Container {
-         //   bottomPadding: 0
-         //   bottomMargin: 0
-         //   verticalAlignment: VerticalAlignment.Bottom
          topPadding: 100
-         leftPadding: 50
-         maxHeight: 700
-         minHeight: 300
         TextField {
             id: line_name
-            maxWidth: 440
+            preferredWidth: 440
+            textStyle.fontSize: FontSize.XXLarge
             hintText: qsTr("请输入实时公交线路 ")
             text: qsTr("M264")
             }
         Button {
+            text: qsTr("查询")
+            imageSource: "asset:///images/ic_search.png"
+            maxWidth: 200
+            onClicked: {
+                networkBus.get_lines_by_city(listDialog.value,line_name.text)
+                var page = pageDefinition.createObject()
+                navigationPane.push(page)
+            }
+            
+        }
+       /* Button {
         	id: button
         	text: "查询"
         	maxWidth: 200
@@ -150,7 +155,7 @@ Page {
                 var page = pageDefinition.createObject()
                 navigationPane.push(page)
          }
-        }
+        }*/
         layout: StackLayout {
             orientation: LayoutOrientation.LeftToRight
         }
@@ -158,42 +163,97 @@ Page {
         
     
     Container {
-   //     background: Color.Cyan
-      //  verticalAlignment: VerticalAlignment.Bottom
-    //    bottomPadding: 0
-     //   visible: true
-        leftPadding: 50
-        rightPadding: 50
-        
+        topPadding: 100
         Label {
             text: "常用线路"
             textStyle{
-                textAlign: TextAlign.Center
+                fontWeight: FontWeight.W100
+                fontSize: FontSize.Large
             }
         }
-        Divider {
-        
+        Container {
+            background: Color.Blue
+            preferredHeight: 2
+            preferredWidth: 768
         }
-    }
-    
-    }
-/*    attachedObjects: [
-        Sheet {
-            id: busResultSheet
-            content: Page {
-                ControlDelegate {
-                    source: "resultPage.qml"
-                    delegateActive: true
+        ListView {
+            property NetworkBus networkBus : networkBus
+            id: localDataList
+            visible: !networkBus.process
+            dataModel: networkBus.localDataModel
+            layout: StackListLayout {
+                orientation: LayoutOrientation.TopToBottom
+            }
+            topPadding: 0
+            listItemComponents: [
+                ListItemComponent {
+                    Container {
+                        id: rootItem
+                        layout: StackLayout {
+                            orientation: LayoutOrientation.TopToBottom
+                        }
+                        minWidth: 120
+                        Container {
+                            minWidth: 120
+                            bottomPadding: 0
+                            verticalAlignment: VerticalAlignment.Bottom
+                            layout: StackLayout {
+                                orientation: LayoutOrientation.LeftToRight
+                            }
+                            Container {
+                             //   minWidth: 568
+                              //  maxWidth: 568
+                                preferredWidth: 568
+                                Label {
+                                    text: qsTr(ListItemData.line_name)
+                                }
+                                Label {
+                                    text: qsTr(ListItemData.start_station + "  -  " + ListItemData.end_station)
+                                    textStyle.fontStyle: FontStyle.Italic
+                                    textStyle.fontSize: FontSize.Small
+                                }
+                            }
+                            Container {
+                                rightPadding: 0
+                                horizontalAlignment: HorizontalAlignment.Right
+                                verticalAlignment: VerticalAlignment.Center
+                              //  background: Color.Blue
+                                
+                                /*Button {
+                                    imageSource: "asset:///images/ic_delete.png"
+                                    maxWidth: 70
+                                    onClicked: {
+                                        rootItem.ListItem.view.networkBus.deleteRecord(ListItemData.record_id)
+                                    }
+                                }*/
+                                ImageButton {
+                                 defaultImageSource: "asset:///images/ic_clear.png"
+                               //  maxWidth: 70
+                                 onClicked: {
+                                 rootItem.ListItem.view.networkBus.deleteRecord(ListItemData.record_id)
+                                 }
+                                 }
+                            }
+                            
+                            
+                        }
+                        
+                        Divider {
+                        
+                        }
+                    }
+                
                 }
-            }
+            
+            ]
         }
-    ]*/
+    }
+    }
     attachedObjects: ComponentDefinition {
         id: pageDefinition;
         source: "resultPage.qml"
     }
 }
-
 attachedObjects: [
     NetworkBus {
         id: networkBus

@@ -28,7 +28,11 @@ const QString DB_PATH = "./data/kumikeDatabase.db";
     const bool dbInited = initDatabase();
     root->setProperty("databaseOpen", dbInited);
 }*/
-
+DBService::DBService(){
+	initDataModel();
+	initDatabase();
+	this->readRecords();
+}
 void DBService::initDataModel()
 {
     m_dataModel = new QListDataModel<busline*>();
@@ -48,24 +52,29 @@ bool DBService::initDatabase()
                       // will also fail
     }
     SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+/*
     sqlda->execute("DROP TABLE IF EXISTS search_records");
-    if(!sqlda->hasError()) {
-        qDebug() << "Table dropped.";
-    } else {
-        const DataAccessError error = sqlda->error();
-        alert(tr("Drop table error: %1").arg(error.errorMessage()));//.arg(error.text()));
-    }
-    const QString createSQL = "CREATE TABLE search_records "
+        if(!sqlda->hasError()) {
+            qDebug() << "Table dropped.";
+        } else {
+            const DataAccessError error = sqlda->error();
+            alert(tr("Drop table error: %1").arg(error.errorMessage()));//.arg(error.text()));
+        }
+*/
+
+
+    const QString createSQL = "CREATE TABLE if not exists search_records "
                               "  (record_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                               "  line_name VARCHAR, "
     							"  start_station VARCHAR, "
     							"  end_station VARCHAR, "
     							"  price VARCHAR, "
     							"  search_time INTEGER, "
+    						//	" sid VARCHAR, "
                                 "  city_id VARCHAR);";//city_id line_name 加复合索引，search_time加单列索引
     sqlda->execute(createSQL);
     if(!sqlda->hasError()) {
-        qDebug() << "Table created.";
+       // qDebug() << "Table created.";
     } else {
         const DataAccessError error = sqlda->error();
         alert(tr("Create table error: %1").arg(error.errorMessage()));//.arg(error.text()));
@@ -73,6 +82,36 @@ bool DBService::initDatabase()
     }
 
     return true;
+}
+int DBService::findRecordId(const QString city_id,const QString line_name){
+    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+    const QString sqlQuery = "SELECT record_id FROM search_records where city_id=:city_id  and line_name=:line_name";
+    QVariantMap bindings;
+        bindings["city_id"] = city_id;
+        bindings["line_name"] = line_name;
+    QVariant result = sqlda->execute(sqlQuery,bindings);
+    if (!sqlda->hasError()) {
+        int recordsRead = 0;
+        if( !result.isNull() ) {
+            QVariantList list = result.value<QVariantList>();
+
+            recordsRead = list.size();
+            for(int i = 0; i < recordsRead; i++) {
+            	QVariantMap map = list.at(i).value<QVariantMap>();
+            	return map["record_id"].toInt();
+              //  return list.at(i).toInt();
+            }
+        }
+
+        qDebug() << "findRecordId:find  " << recordsRead << " records succeeded";
+
+        if (recordsRead == 0) {
+         //   alert(tr("The customer table is empty."));
+        }
+    } else {
+        alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));
+    }
+    return 0;
 }
 bool DBService::createRecord(const busline* busline)
 {
@@ -88,7 +127,7 @@ bool DBService::createRecord(const busline* busline)
                   "    VALUES (:line_name, :start_station,:end_station,:price,:search_time,:city_id)", contact);
     bool success = false;
     if(!sqlda->hasError()) {
-        alert(tr("Create record succeeded."));
+     //   alert(tr("Create record succeeded."));
         success = true;
     } else {
         const DataAccessError error = sqlda->error();
@@ -109,7 +148,7 @@ bool DBService::updateRecord(const int record_id)
     sqlda->execute(sqlCommand, bindings);
     if (!sqlda->hasError()) {
     	updated = true;
-    	alert(tr("Customer with id=%1 was updated.").arg(record_id));
+    	//alert(tr("Customer with id=%1 was updated.").arg(record_id));
     	/*
         // 5. Verify that a customer with that ID exists.
         const QString sqlVerify = "SELECT firstName FROM customers WHERE customerID = :customerID";
@@ -146,7 +185,7 @@ bool DBService::deleteRecord(const int record_id)
     bool deleted = false;
     if (!sqlda->hasError()) {
     	deleted = true;
-    	alert(tr("Customer with id=%1 was deleted.").arg(record_id));
+    //	alert(tr("Customer with id=%1 was deleted.").arg(record_id));
         /*verificationResult = sqlda->execute(sqlVerify, argsList);
         if (!verificationResult.isNull() && verificationResult.value<QVariantList>().size() == 0) {
             alert(tr("Customer with id=%1 was deleted.").arg(customerID));
@@ -157,7 +196,6 @@ bool DBService::deleteRecord(const int record_id)
     } else {
         alert(tr("SQL error: %1").arg(sqlda->error().errorMessage()));
     }
-
     return deleted;
 }
 
@@ -190,7 +228,7 @@ void DBService::readRecords()
         qDebug() << "Read " << recordsRead << " records succeeded";
 
         if (recordsRead == 0) {
-            alert(tr("The customer table is empty."));
+            alert(QString::fromUtf8("无常用线路信息."));
         }
     } else {
         alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));

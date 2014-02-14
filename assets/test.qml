@@ -7,12 +7,15 @@ Page {
             rootIndexPath: [1]
          //   rotationZ: 90
             layout: StackListLayout {
-                orientation: LayoutOrientation.LeftToRight
+                orientation: LayoutOrientation.TopToBottom
             }
             listItemComponents: [
                 ListItemComponent {
                     id: listitem
                     type: "item"
+                    Container {
+                        
+                    
                     Container {
                         leftPadding: ListItem.indexPath
                         layout: StackLayout {
@@ -23,15 +26,25 @@ Page {
                             imageSource: ListItemData.image
                         }
                         Label {
-                            text: listitem.ListItem.indexPath
+                            text: ListItemData.title
+                          //  textStyle.color: Color.Green
+                          	textStyle.fontWeight: FontWeight.W100
+                          	textStyle.fontSize: FontSize.Large
                         }
-                        TextArea {
+                        
+                        /*TextArea {
                             maxWidth: 82
                             text: ListItemData.title
                             horizontalAlignment: HorizontalAlignment.Left
                             verticalAlignment: VerticalAlignment.Top
-                        }
+                        }*/
                     }
+                    Container {
+                        background: Color.Blue
+                        preferredHeight: 1
+                        preferredWidth: 768
+                    }
+                }
                 }
             ]
         }
