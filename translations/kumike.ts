@@ -62,4 +62,11 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>test</name>
+    <message>
+        <source>鏌ヨ涓</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

@@ -96,6 +96,7 @@ class NetworkBus : public QObject{
 		void changeCity(const QString newCity);
 		void changeBusLine(const int m_dir);
 		void deleteRecord(const int record_id);
+		void reloadGPSData();
 	public:
 		void reloadData();
 		void locateBus();

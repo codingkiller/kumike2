@@ -1,6 +1,40 @@
 import bb.cascades 1.2
 
 Page {
+    titleBar: TitleBar {
+        id: secondtitlebar
+        kind: TitleBarKind.FreeForm
+        kindProperties: FreeFormTitleBarKindProperties {
+            Container{
+                id:secondtitlebarcontainer
+                verticalAlignment: VerticalAlignment.Center
+                horizontalAlignment: HorizontalAlignment.Center
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                topPadding: 20
+                Label {
+                    text: ""
+                    minWidth: 290
+                }
+                Label {
+                    id: secondtitlebarcontainerlabel
+                    text :  qsTr("查询中 ") ;
+                    textStyle {
+                        color: Color.White
+                        fontSize: FontSize.XLarge
+                    }
+                    horizontalAlignment: HorizontalAlignment.Center
+                    layoutProperties: StackLayoutProperties { spaceQuota: 1 }
+                }
+                ImageButton {
+                    rightPadding: 0
+                    rightMargin: 0
+                    defaultImageSource: "asset:///images/ic_reload.png"
+                }
+            }
+        }
+    }
     Container {
         ListView {
             dataModel: XmlDataModel { source: "bus_station.xml" }

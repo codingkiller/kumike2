@@ -1,7 +1,7 @@
 import bb.cascades 1.0
 import bb.data 1.0
-
 Page {
+
     id: secondPage
     titleBar: TitleBar {
         id: secondtitlebar
@@ -12,6 +12,13 @@ Page {
                 verticalAlignment: VerticalAlignment.Center
                 horizontalAlignment: HorizontalAlignment.Center
                 topPadding: 20
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: ""
+                    minWidth: 290
+                }
                 Label {
                     id: secondtitlebarcontainerlabel
                 	text : networkBus.process ? qsTr("查询中 ") : networkBus.line_name;
@@ -21,6 +28,15 @@ Page {
                     }
                     horizontalAlignment: HorizontalAlignment.Center
                     layoutProperties: StackLayoutProperties { spaceQuota: 1 }
+                }
+                ImageButton {
+                    rightPadding: 0
+                    rightMargin: 0
+                //   defaultImageSource:  
+                   defaultImageSource: "asset:///images/ic_reload.png"
+                    onClicked: {
+                        networkBus.reloadGPSData();
+                    }
                 }
                 }
         }

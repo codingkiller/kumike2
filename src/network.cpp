@@ -201,7 +201,13 @@ void NetworkBus::changeBusLine(int m_dir){
 	this->get_subline_inf(this->getSid());
 //	emit buslineChanged();
 }
-
+void NetworkBus::reloadGPSData(){
+//		m_dataModel->clear();
+//		m_dataModel->append(m_dir == 0 ? *startStation : *endStation);
+		this->setProcess(true);
+		emit processChanged();
+		this->get_online_gps();
+}
 //! [1]
 void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 	if(reply->error() != QNetworkReply::NoError){
