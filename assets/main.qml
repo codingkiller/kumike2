@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2011-2013 BlackBerry Limited.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 import bb.cascades 1.0
 import NetworkBus 1.0
@@ -27,14 +12,10 @@ Page {
     
     titleBar: TitleBar {
         id: titleBar
-    //    title: qsTr("ku mi x")
         kind: TitleBarKind.FreeForm
         kindProperties: FreeFormTitleBarKindProperties {
             Container {
                 id: firstContainer
-           //     background: Color.Red
-           //     maxHeight: 500
-                
                 layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
                 topPadding: 20
                 verticalAlignment: VerticalAlignment.Bottom
@@ -58,9 +39,6 @@ Page {
                         color: Color.White
                     }
                     verticalAlignment:VerticalAlignment.Center
-                //    topPadding: 50
-                //    bottomPadding: 0
-                 //   rightPadding: 0
                     maxWidth: 74
                     attachedObjects: [
                         SystemListDialog{
@@ -71,9 +49,6 @@ Page {
                             selectionMode: ListSelectionMode.Single
                             confirmButton.label: "确定"
                             cancelButton.label: "取消"
-                         //   includeRememberMe: true
-                         //   rememberMeChecked: true
-                            
                             onFinished: {
                                 if(listDialog.result == SystemUiResult.CancelButtonSelection){
                                     return;
@@ -126,7 +101,7 @@ Page {
         rightPadding: 50
         preferredWidth: 668
         horizontalAlignment: HorizontalAlignment.Center
-        background: backgroundPaint.imagePaint
+  //      background: backgroundPaint.imagePaint
         attachedObjects: [
             ImagePaintDefinition {
                 id: backgroundPaint
@@ -139,10 +114,9 @@ Page {
         TextField {
             id: line_name
             preferredWidth: 440
-          //  textStyle.fontSize: FontSize.XXLarge
             hintText: qsTr("请输入实时公交线路 ")
             
-            text: qsTr("M264")
+        //    text: qsTr("M264")
             input.onSubmitted: {
                 if(searchButton.enabled)
                 	searchButton.clicked()
@@ -176,25 +150,18 @@ Page {
             }
             
         }
-       /* Button {
-        	id: button
-        	text: "查询"
-        	maxWidth: 200
-        	onClicked: {
-                networkBus.get_lines_by_city(listDialog.value,line_name.text)
-                var page = pageDefinition.createObject()
-                navigationPane.push(page)
-         }
-        }*/
         layout: StackLayout {
             orientation: LayoutOrientation.LeftToRight
         }
     }
         
-    
     Container {
-        topPadding: 50
-        maxHeight: 900
+        background: Color.Red
+        preferredHeight: 300
+    }
+    Container {
+      //  topPadding: 50
+        maxHeight: 600
         Label {
             text: "常用线路"
             textStyle{
@@ -225,9 +192,7 @@ Page {
                         layout: StackLayout {
                             orientation: LayoutOrientation.TopToBottom
                         }
-                    //    minWidth: 120
                         Container {
-                      //      minWidth: 120
                             bottomPadding: 0
                             verticalAlignment: VerticalAlignment.Bottom
                             layout: StackLayout {
@@ -245,7 +210,7 @@ Page {
                                 Label {
                                     text: qsTr(ListItemData.start_station + "-" + ListItemData.end_station)
                                     textStyle.fontStyle: FontStyle.Italic
-                                    textStyle.fontSize: FontSize.Small
+                                    textStyle.fontSize: FontSize.XSmall
                                 }
                             }
                             Container {
@@ -263,25 +228,28 @@ Page {
                                  defaultImageSource: "asset:///images/ic_clear.png"
                                  onClicked: {
                                  rootItem.ListItem.view.networkBus.deleteRecord(ListItemData.record_id)
-                              //   rootItem.destroy(500);
                                  rootItem.visible = false;
                                  }
                                  }
                             }
                         }
-                        
                         Divider {
-                        
                         }
-                        
                     }
-                
                 }
-            
             ]
             onTriggered: {
-                line_name.text = networkBus.localDataModel.data(indexPath).line_name;
-                searchButton.clicked();
+                var thisLineName = networkBus.localDataModel.data(indexPath).line_name;
+                line_name.setText(thisLineName);
+                networkBus.get_lines_by_city(listDialog.value,line_name.text);
+                var page = pageDefinition.createObject();
+                navigationPane.push(page);
+
+                
+                
+            //    line_name.text = networkBus.localDataModel.data(indexPath).line_name;
+            //    console.log("hahahaha:"+line_name.text);
+            //    searchButton.clicked();
             }
         }
         Container {
@@ -290,11 +258,31 @@ Page {
             preferredWidth: 768
         }
     }
+    Container {
+	preferredWidth: 668
+	horizontalAlignment: HorizontalAlignment.Center
+	verticalAlignment: VerticalAlignment.Center
+        Button {
+            text: qsTr("查看所有线路")
+            preferredWidth: 668
+            onClicked: {
+                networkBus.get_all_line(listDialog.value)
+                var page = allstations.createObject()
+                navigationPane.push(page)
+
+            }
+        }
+        attachedObjects: ComponentDefinition {
+            id: allstations;
+            source: "allline.qml"
+        }
+    }
     }
     attachedObjects: ComponentDefinition {
         id: pageDefinition;
         source: "resultPage.qml"
     }
+    
 }
 attachedObjects: [
     NetworkBus {

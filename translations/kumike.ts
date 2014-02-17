@@ -37,11 +37,18 @@
     </message>
 </context>
 <context>
-    <name>main</name>
+    <name>allline</name>
     <message>
-        <source>M264</source>
+        <source>所有线路</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>查询中 </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
     <message>
         <source>酷米客公交 </source>
         <translation type="unfinished"></translation>
@@ -58,6 +65,10 @@
         <source>请输入实时公交线路</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>查看所有线路</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>resultPage</name>
@@ -69,7 +80,7 @@
 <context>
     <name>test</name>
     <message>
-        <source>鏌ヨ涓</source>
+        <source>查询中 </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

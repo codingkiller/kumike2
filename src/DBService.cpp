@@ -201,7 +201,7 @@ bool DBService::deleteRecord(const int record_id)
 void DBService::readRecords(const QString city_id)
 {
 //    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
-    const QString sqlQuery = "SELECT record_id,line_name, start_station,end_station,price,search_time,city_id FROM search_records where city_id=:city_id order by search_time desc";
+    const QString sqlQuery = "SELECT record_id,line_name, start_station,end_station,price,search_time,city_id FROM search_records where city_id=:city_id order by search_time desc limit 10";
     QVariantMap bindings;
     bindings["city_id"] = city_id;
     QVariant result = sqlda->execute(sqlQuery,bindings);

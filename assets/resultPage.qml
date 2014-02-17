@@ -1,5 +1,6 @@
 import bb.cascades 1.0
 import bb.data 1.0
+import NetworkBus 1.0
 Page {
 
     id: secondPage
@@ -17,7 +18,7 @@ Page {
                 }
                 Label {
                     text: ""
-                    minWidth: 290
+                    minWidth: 270
                 }
                 Label {
                     id: secondtitlebarcontainerlabel
@@ -30,10 +31,11 @@ Page {
                     layoutProperties: StackLayoutProperties { spaceQuota: 1 }
                 }
                 ImageButton {
-                    rightPadding: 0
-                    rightMargin: 0
+                 //   rightPadding: 0
+                 //   rightMargin: 0
                 //   defaultImageSource:  
                    defaultImageSource: "asset:///images/ic_reload.png"
+                   
                     onClicked: {
                         networkBus.reloadGPSData();
                     }
@@ -42,6 +44,10 @@ Page {
         }
     }
     Container {
+        Container {
+            background: Color.Red
+            preferredHeight: 300
+        }
         Container {
             layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
             topPadding: 20
@@ -81,13 +87,14 @@ Page {
                 }
             }
         }
+
         Container {
             id: thirdContainer
             layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
             topPadding: 20
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
-            minHeight: 820
+         //   minHeight: 820
             ListView {
                 id: stationListView
                 visible: !networkBus.process
@@ -105,7 +112,9 @@ Page {
                             minWidth: 120
                             Container {
                                 minWidth: 120
+                                maxHeight: 27
                                 bottomPadding: 0
+                                topPadding: 0
                                 verticalAlignment: VerticalAlignment.Bottom
                                 layout: StackLayout {
                                     orientation: LayoutOrientation.LeftToRight
@@ -115,9 +124,9 @@ Page {
                                     minWidth: ListItemData.bus_state == "cur_station" ? 0 : 50
                                 }
                                 ImageView {
+                                    maxHeight: 27
                                     imageSource: "asset:///images/ic_bus_enable.jpg"
                                     visible: ListItemData.bus_state
-                                    
                                 }
                             }
                             Divider {
@@ -125,6 +134,7 @@ Page {
                                 maxWidth: 120
                                 minHeight: 1
                                 maxHeight: 2
+                      //          topPadding: 0
                             }
                             Container {
                                 minWidth: 120
