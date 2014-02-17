@@ -34,6 +34,7 @@ Page {
                 id: firstContainer
            //     background: Color.Red
            //     maxHeight: 500
+                
                 layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
                 topPadding: 20
                 verticalAlignment: VerticalAlignment.Bottom
@@ -105,7 +106,7 @@ Page {
                     }
                 }
                 ImageView {
-                    imageSource: "asset:///images/ic_location.png"
+                    imageSource: "asset:///images/ic_down.png"
                     horizontalAlignment: HorizontalAlignment.Left
                     onTouch: {
                         listDialog.clearList();
@@ -125,21 +126,50 @@ Page {
         rightPadding: 50
         preferredWidth: 668
         horizontalAlignment: HorizontalAlignment.Center
-
+        background: backgroundPaint.imagePaint
+        attachedObjects: [
+            ImagePaintDefinition {
+                id: backgroundPaint
+                imageSource: "asset:///images/sky1.jpg"
+                
+            }
+        ]
         Container {
-         topPadding: 100
+         topPadding: 50
         TextField {
             id: line_name
             preferredWidth: 440
-            textStyle.fontSize: FontSize.XXLarge
+          //  textStyle.fontSize: FontSize.XXLarge
             hintText: qsTr("请输入实时公交线路 ")
+            
             text: qsTr("M264")
+            input.onSubmitted: {
+                if(searchButton.enabled)
+                	searchButton.clicked()
+            }
+            validator: Validator {
+                id: searchValidator
+                mode: ValidationMode.Immediate
+                errorMessage: qsTr("请输入实时公交线路")
+                onValidate: {
+                    if(line_name.text.trim().length == 0){
+                        state = ValidationState.Invalid
+                        searchButton.enabled = false;
+                        return;
+                    }
+                    state = ValidationState.Valid
+                    searchButton.enabled = true
+                }
+            }
             }
         Button {
+            id: searchButton
             text: qsTr("查询")
             imageSource: "asset:///images/ic_search.png"
             maxWidth: 200
+            enabled: searchValidator.valid
             onClicked: {
+                if(searchValidator.valid)
                 networkBus.get_lines_by_city(listDialog.value,line_name.text)
                 var page = pageDefinition.createObject()
                 navigationPane.push(page)
@@ -163,7 +193,8 @@ Page {
         
     
     Container {
-        topPadding: 100
+        topPadding: 50
+        maxHeight: 900
         Label {
             text: "常用线路"
             textStyle{
@@ -178,6 +209,8 @@ Page {
         }
         ListView {
             property NetworkBus networkBus : networkBus
+            property TextField line_name : line_name
+            property Button searchButton : searchButton
             id: localDataList
             visible: !networkBus.process
             dataModel: networkBus.localDataModel
@@ -192,60 +225,69 @@ Page {
                         layout: StackLayout {
                             orientation: LayoutOrientation.TopToBottom
                         }
-                        minWidth: 120
+                    //    minWidth: 120
                         Container {
-                            minWidth: 120
+                      //      minWidth: 120
                             bottomPadding: 0
                             verticalAlignment: VerticalAlignment.Bottom
                             layout: StackLayout {
                                 orientation: LayoutOrientation.LeftToRight
                             }
                             Container {
-                             //   minWidth: 568
-                              //  maxWidth: 568
-                                preferredWidth: 568
+                                preferredWidth: 618
+                                layout: StackLayout {
+                                    orientation: LayoutOrientation.LeftToRight
+                                }
                                 Label {
+                                    preferredWidth: 100
                                     text: qsTr(ListItemData.line_name)
                                 }
                                 Label {
-                                    text: qsTr(ListItemData.start_station + "  -  " + ListItemData.end_station)
+                                    text: qsTr(ListItemData.start_station + "-" + ListItemData.end_station)
                                     textStyle.fontStyle: FontStyle.Italic
                                     textStyle.fontSize: FontSize.Small
                                 }
                             }
                             Container {
+                                maxHeight: 50
+                                maxWidth: 50
                                 rightPadding: 0
                                 horizontalAlignment: HorizontalAlignment.Right
                                 verticalAlignment: VerticalAlignment.Center
-                              //  background: Color.Blue
-                                
-                                /*Button {
-                                    imageSource: "asset:///images/ic_delete.png"
-                                    maxWidth: 70
-                                    onClicked: {
-                                        rootItem.ListItem.view.networkBus.deleteRecord(ListItemData.record_id)
-                                    }
-                                }*/
+                                layout: StackLayout {
+                                    orientation: LayoutOrientation.RightToLeft
+                                }
                                 ImageButton {
+                                    maxHeight: 50
+                                    maxWidth: 50
                                  defaultImageSource: "asset:///images/ic_clear.png"
-                               //  maxWidth: 70
                                  onClicked: {
                                  rootItem.ListItem.view.networkBus.deleteRecord(ListItemData.record_id)
+                              //   rootItem.destroy(500);
+                                 rootItem.visible = false;
                                  }
                                  }
                             }
-                            
-                            
                         }
                         
                         Divider {
                         
                         }
+                        
                     }
                 
                 }
             
             ]
+            onTriggered: {
+                line_name.text = networkBus.localDataModel.data(indexPath).line_name;
+                searchButton.clicked();
+            }
+        }
+        Container {
+            background: Color.Blue
+            preferredHeight: 2
+            preferredWidth: 768
         }
     }
     }

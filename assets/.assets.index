@@ -1,13 +1,16 @@
 1
-11
+14
 bus_station.xml
+images/ic_background.png
 images/ic_bus_enable.jpg
 images/ic_clear.png
 images/ic_delete.png
+images/ic_down.png
 images/ic_location.png
 images/ic_previous.png
 images/ic_reload.png
 images/ic_search.png
+images/sky1.jpg
 main.qml
 resultPage.qml
 test.qml

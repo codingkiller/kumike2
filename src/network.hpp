@@ -64,7 +64,8 @@ class NetworkBus : public QObject{
 			m_all_station = "";
 			m_dir = 0;
 			m_process = false;
-			m_city_id = "";
+		//	m_city_id = "";
+			reloadData();
 			m_isopen = 0;
 			m_eid = "";
 			startLine = new busline;
@@ -84,6 +85,7 @@ class NetworkBus : public QObject{
 			return m_city_id;
 		}
 		QListDataModel<busline*>* localDataModel(){
+			dbService->readRecords(this->city_id());
 			return dbService->dataModel();
 		}
 
@@ -105,7 +107,8 @@ class NetworkBus : public QObject{
 						m_all_station = "";
 						m_dir = 0;
 						m_process = false;
-						m_city_id = "";
+				reloadData();
+						//	m_city_id = "";
 						m_isopen = 0;
 						m_eid = "";
 						startLine = new busline;

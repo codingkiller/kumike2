@@ -4,7 +4,6 @@
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/Application>
 #include <bb/cascades/QmlDocument>
-#include <bb/data/SqlDataAccess>
 #include <bb/data/DataAccessError>
 #include <bb/system/SystemDialog>
 
@@ -15,7 +14,6 @@ using namespace bb::cascades;
 using namespace bb::data;
 using namespace bb::system;
 
-const QString DB_PATH = "./data/kumikeDatabase.db";
 
 /*App::App()
     : m_dataModel(0)
@@ -29,9 +27,10 @@ const QString DB_PATH = "./data/kumikeDatabase.db";
     root->setProperty("databaseOpen", dbInited);
 }*/
 DBService::DBService(){
+	DB_PATH = "./data/kumikeDatabase.db";
 	initDataModel();
 	initDatabase();
-	this->readRecords();
+	//this->readRecords();
 }
 void DBService::initDataModel()
 {
@@ -51,7 +50,7 @@ bool DBService::initDatabase()
         return false; // return as if we cannot open a connection to the db, then below calls
                       // will also fail
     }
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+    sqlda = new SqlDataAccess(DB_PATH);
 /*
     sqlda->execute("DROP TABLE IF EXISTS search_records");
         if(!sqlda->hasError()) {
@@ -84,7 +83,7 @@ bool DBService::initDatabase()
     return true;
 }
 int DBService::findRecordId(const QString city_id,const QString line_name){
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+  //  SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
     const QString sqlQuery = "SELECT record_id FROM search_records where city_id=:city_id  and line_name=:line_name";
     QVariantMap bindings;
         bindings["city_id"] = city_id;
@@ -119,7 +118,7 @@ bool DBService::createRecord(const busline* busline)
         alert(tr("You must provide a line_name or end_station."));
         return false;
     }
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+//    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
     QVariantList contact;
     contact << busline->getLineName() << busline->getStartStation() << busline->getEndStation() << busline->getPrice() << 1 << busline->getCityId();
     sqlda->execute("INSERT INTO search_records"
@@ -138,7 +137,7 @@ bool DBService::createRecord(const busline* busline)
 
 bool DBService::updateRecord(const int record_id)
 {
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+  //  SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
     const QString sqlCommand = "UPDATE search_records "
                                "    SET search_time = search_time+1"
                                "    WHERE record_id = :record_id";
@@ -170,7 +169,7 @@ bool DBService::updateRecord(const int record_id)
 
 bool DBService::deleteRecord(const int record_id)
 {
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+  //  SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
     /*const QString sqlVerify = "SELECT firstName FROM customers WHERE customerID = :customerID";
     QVariantList argsList;
     argsList << customerIDnumber;
@@ -199,11 +198,13 @@ bool DBService::deleteRecord(const int record_id)
     return deleted;
 }
 
-void DBService::readRecords()
+void DBService::readRecords(const QString city_id)
 {
-    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
-    const QString sqlQuery = "SELECT record_id,line_name, start_station,end_station,price,search_time,city_id FROM search_records order by search_time desc";
-    QVariant result = sqlda->execute(sqlQuery);
+//    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
+    const QString sqlQuery = "SELECT record_id,line_name, start_station,end_station,price,search_time,city_id FROM search_records where city_id=:city_id order by search_time desc";
+    QVariantMap bindings;
+    bindings["city_id"] = city_id;
+    QVariant result = sqlda->execute(sqlQuery,bindings);
     if (!sqlda->hasError()) {
         int recordsRead = 0;
         m_dataModel->clear();

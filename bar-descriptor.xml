@@ -84,8 +84,11 @@
     <icon>
         <image>icon.png</image>
     </icon>
-
+	<splashScreens>
+       <image>ic_background.png</image>
+    </splashScreens>
     <asset path="icon.png">icon.png</asset>
+    <asset path="ic_background.png">ic_background.png</asset>
     <asset path="assets">assets</asset>
 
     <!-- Locale support -->

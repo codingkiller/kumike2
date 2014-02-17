@@ -163,7 +163,7 @@ void NetworkBus::onLineIsOpenFinished(QNetworkReply* reply){
 }
 
 void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name){
-	//init();
+	init();
 	this->setProcess(true);
 	emit processChanged();
 	QNetworkAccessManager *pNetworkAccessManager = new QNetworkAccessManager(this);
@@ -180,7 +180,8 @@ void NetworkBus::deleteRecord(const int record_id){
 		    	bool result = dbService->deleteRecord(record_id);
 		    	if(result){
 		    		qDebug() << "delete data record_id :" << record_id << " finished ";
-		    		emit localDataModelChanged();
+		    	//	dbService->readRecords();
+		    	//	emit localDataModelChanged();
 		    	}
 		    }
 void NetworkBus::changeBusLine(int m_dir){
@@ -256,7 +257,7 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 				}else{
 					dbService->createRecord(bus);
 				}
-				dbService->readRecords();
+				dbService->readRecords(m_city_id);
 				emit localDataModelChanged();
 				startLine = bus;
 			}

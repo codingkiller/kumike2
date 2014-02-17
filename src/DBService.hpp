@@ -16,9 +16,12 @@
 #define DBSERVICE_HPP
 
 #include <bb/cascades/QListDataModel>
+#include <bb/data/SqlDataAccess>
+
 #include "busline.hpp"
 
 using namespace bb::cascades;
+using namespace bb::data;
 
 /*
  * @brief Declaration of our application's class (as opposed to the BB Cascades
@@ -35,11 +38,11 @@ class DBService: public QObject
 
 public:
     // "Q_INVOKABLE" allows these functions to be called from main.qml
-    Q_INVOKABLE bool createRecord(const busline* busline);
-    Q_INVOKABLE void readRecords();
-    Q_INVOKABLE bool updateRecord(const int record_id);
-    Q_INVOKABLE bool deleteRecord(const int record_id);
-    Q_INVOKABLE int findRecordId(const QString city_id,const QString line_name);
+    bool createRecord(const busline* busline);
+    void readRecords(const QString city_id);
+    bool updateRecord(const int record_id);
+    bool deleteRecord(const int record_id);
+    int findRecordId(const QString city_id,const QString line_name);
     DBService();
     bb::cascades::QListDataModel<busline*>* dataModel() const;
 
@@ -55,6 +58,8 @@ private:
 
     // The data shown by the list view.
     QListDataModel<busline*>* m_dataModel;
+    QString DB_PATH;
+    SqlDataAccess *sqlda;
 };
 
 #endif
