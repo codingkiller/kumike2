@@ -45,7 +45,7 @@ bool DBService::initDatabase()
     database.setDatabaseName(DB_PATH);
     if (database.open() == false) {
         const QSqlError error = database.lastError();
-        alert(tr("Error opening connection to the database: %1").arg(error.text()));
+   //     alert(tr("Error opening connection to the database: %1").arg(error.text()));
         qDebug() << "\nDatabase NOT opened.";
         return false; // return as if we cannot open a connection to the db, then below calls
                       // will also fail
@@ -76,7 +76,7 @@ bool DBService::initDatabase()
        // qDebug() << "Table created.";
     } else {
         const DataAccessError error = sqlda->error();
-        alert(tr("Create table error: %1").arg(error.errorMessage()));//.arg(error.text()));
+   //     alert(tr("Create table error: %1").arg(error.errorMessage()));//.arg(error.text()));
         return false;
     }
 
@@ -108,14 +108,14 @@ int DBService::findRecordId(const QString city_id,const QString line_name){
          //   alert(tr("The customer table is empty."));
         }
     } else {
-        alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));
+   //     alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));
     }
     return 0;
 }
 bool DBService::createRecord(const busline* busline)
 {
     if (busline->getLineName().trimmed().isEmpty() && busline->getEndStation().trimmed().isEmpty()) {
-        alert(tr("You must provide a line_name or end_station."));
+   //     alert(tr("You must provide a line_name or end_station."));
         return false;
     }
 //    SqlDataAccess *sqlda = new SqlDataAccess(DB_PATH);
@@ -130,7 +130,7 @@ bool DBService::createRecord(const busline* busline)
         success = true;
     } else {
         const DataAccessError error = sqlda->error();
-        alert(tr("Create record error: %1").arg(error.errorMessage()));
+   //     alert(tr("Create record error: %1").arg(error.errorMessage()));
     }
     return success;
 }
@@ -161,7 +161,7 @@ bool DBService::updateRecord(const int record_id)
             alert(tr("Customer with id=%1 was not found.").arg(customerID));
         }
     */} else {
-        alert(tr("SQL error: %1").arg(sqlda->error().errorMessage()));
+   //     alert(tr("SQL error: %1").arg(sqlda->error().errorMessage()));
     }
 
     return updated;
@@ -193,7 +193,7 @@ bool DBService::deleteRecord(const int record_id)
             alert(tr("Customer with id=%1 was not found.").arg(customerID));
         }*/
     } else {
-        alert(tr("SQL error: %1").arg(sqlda->error().errorMessage()));
+   //     alert(tr("SQL error: %1").arg(sqlda->error().errorMessage()));
     }
     return deleted;
 }
@@ -229,17 +229,17 @@ void DBService::readRecords(const QString city_id)
         qDebug() << "Read " << recordsRead << " records succeeded";
 
         if (recordsRead == 0) {
-            alert(QString::fromUtf8("无常用线路信息."));
+      //      alert(QString::fromUtf8("无常用线路信息."));
         }
     } else {
-        alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));
+     //   alert(tr("Read records failed: %1").arg(sqlda->error().errorMessage()));
     }
 }
 QListDataModel<busline*>* DBService::dataModel() const
 {
     return m_dataModel;
 }
-void DBService::alert(const QString &message)
+/*void DBService::alert(const QString &message)
 {
     SystemDialog *dialog; // SystemDialog uses the BB10 native dialog.
     dialog = new SystemDialog(tr("OK"), 0); // New dialog with on 'Ok' button, no 'Cancel' button
@@ -247,6 +247,7 @@ void DBService::alert(const QString &message)
     dialog->setBody(message); // set the message itself
     dialog->setDismissAutomatically(true); // Hides the dialog when a button is pressed.
     bool ok = connect(dialog, SIGNAL(finished(bb::system::SystemUiResult::Type)), dialog, SLOT(deleteLater()));
+    Q_UNUSED(ok);
     Q_ASSERT(ok);
     dialog->show();
-}
+}*/

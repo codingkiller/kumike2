@@ -52,7 +52,7 @@ private:
     bool initDatabase();
 
     // To alert the user if something has gone wrong
-    void alert(const QString &message);
+  //  void alert(const QString &message);
 
     // The getter method for the property
 

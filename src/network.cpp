@@ -276,6 +276,7 @@ void NetworkBus::onAlllineDataModelFinished(QNetworkReply* reply){
 			bus->setIsOpen(iMap.value("isopen").toInt());//1
 			bus->setDir(iMap.value("dir").toInt());//0/1
 			bus->setCityId(m_city_id);
+			if(bus->getIsOpen() == 1)
 			m_alllineDataModel->append(bus);
 		}
 		reply->deleteLater();
@@ -331,6 +332,10 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 			bus->setIsOpen(iMap.value("isopen").toInt());//1
 			bus->setDir(iMap.value("dir").toInt());//0/1
 			bus->setCityId(m_city_id);
+			if(bus->getIsOpen() == 0){
+				m_error = QString::fromUtf8("本线路暂未开通手机电子站牌。敬请期待！");
+				break;
+			}
 			if(iMap.value("dir").toInt() == 0){
 				int record_id = dbService->findRecordId(m_city_id,bus->getLineName());
 				if(record_id != 0){
@@ -345,6 +350,12 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 			else endLine = bus;
 		}
 		reply->deleteLater();
+		if(m_error.length() > 0){
+			onError();
+			emit buslineChanged();
+			return;
+		}
+
 		this->get_subline_inf(startLine->getId());
 	}
 	emit buslineChanged();

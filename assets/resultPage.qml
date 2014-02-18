@@ -44,15 +44,16 @@ Page {
         }
     }
     Container {
-        Container {
+        /*Container {
             background: Color.Red
             preferredHeight: 300
-        }
+        }*/
         Container {
             layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
             topPadding: 20
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
+        //    visible: !networkBus.process
             Label {
                 id: errorInfo
                 text: networkBus.error
@@ -92,9 +93,9 @@ Page {
             id: thirdContainer
             layout: StackLayout { orientation: LayoutOrientation.TopToBottom }
             topPadding: 20
+            maxHeight: 500
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
-         //   minHeight: 820
             ListView {
                 id: stationListView
                 visible: !networkBus.process
@@ -161,6 +162,7 @@ Page {
             }
         }
         Container {
+            visible: !networkBus.process
             layout: StackLayout { orientation: LayoutOrientation.LeftToRight }
             topPadding: 20
             verticalAlignment: VerticalAlignment.Center

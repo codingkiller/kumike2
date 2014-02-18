@@ -124,7 +124,7 @@ Page {
             validator: Validator {
                 id: searchValidator
                 mode: ValidationMode.Immediate
-                errorMessage: qsTr("请输入实时公交线路")
+                errorMessage: qsTr("请输入实时公交线路 ")
                 onValidate: {
                     if(line_name.text.trim().length == 0){
                         state = ValidationState.Invalid
@@ -155,13 +155,13 @@ Page {
         }
     }
         
-    Container {
+    /*Container {//广告部分
         background: Color.Red
         preferredHeight: 300
-    }
+    }*/
     Container {
-      //  topPadding: 50
-        maxHeight: 600
+        topPadding: 50
+        maxHeight: 800
         Label {
             text: "常用线路"
             textStyle{
@@ -169,10 +169,13 @@ Page {
                 fontSize: FontSize.Large
             }
         }
-        Container {
+        /*Container {
             background: Color.Blue
             preferredHeight: 2
             preferredWidth: 768
+        }*/
+        Divider {
+            
         }
         ListView {
             property NetworkBus networkBus : networkBus
@@ -252,18 +255,22 @@ Page {
             //    searchButton.clicked();
             }
         }
-        Container {
+        /*Container {
             background: Color.Blue
             preferredHeight: 2
             preferredWidth: 768
+        }*/
+        Divider {
+            
         }
     }
     Container {
 	preferredWidth: 668
 	horizontalAlignment: HorizontalAlignment.Center
 	verticalAlignment: VerticalAlignment.Center
+	topPadding: 50
         Button {
-            text: qsTr("查看所有线路")
+            text: qsTr("查看所有线路 ")
             preferredWidth: 668
             onClicked: {
                 networkBus.get_all_line(listDialog.value)

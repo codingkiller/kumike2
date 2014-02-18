@@ -33,7 +33,7 @@ Page {
                 }
                 Label {
                     id: secondtitlebarcontainerlabel
-                    text : networkBus.process ? qsTr("查询中 ") : qsTr("所有线路");
+                    text : networkBus.process ? qsTr("查询中 ") : qsTr("所有线路 ")
                     textStyle {
                         color: Color.White
                         fontSize: FontSize.XLarge
