@@ -46,6 +46,8 @@ Page {
     }
 
     Container {
+        leftPadding: 50
+        rightPadding: 50
         ActivityIndicator {
             id: thirdIndicator
             minHeight: 600

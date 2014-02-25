@@ -102,13 +102,13 @@ Page {
         preferredWidth: 668
         horizontalAlignment: HorizontalAlignment.Center
   //      background: backgroundPaint.imagePaint
-        attachedObjects: [
-            ImagePaintDefinition {
-                id: backgroundPaint
-                imageSource: "asset:///images/sky1.jpg"
-                
-            }
-        ]
+//        attachedObjects: [
+//            ImagePaintDefinition {
+//                id: backgroundPaint
+//                imageSource: "asset:///images/sky1.jpg"
+//                
+//            }
+//        ]
         Container {
          topPadding: 50
         TextField {
