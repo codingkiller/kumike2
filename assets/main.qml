@@ -21,7 +21,7 @@ Page {
                 verticalAlignment: VerticalAlignment.Bottom
                 horizontalAlignment: HorizontalAlignment.Center
                 Label {
-                    text: qsTr("酷米客公交 ")
+                    text: qsTr("公交神器 ")
                     textStyle {
                         color: Color.White
                         fontSize: FontSize.XLarge
@@ -33,8 +33,7 @@ Page {
                 }
                 Label {
                     id: city_name
-                    text: "深圳"
-                    
+                    text: networkBus.city_id=="860201" ? "北京" : networkBus.city_id=="862307" ? "西安" : "深圳"
                     textStyle{
                         color: Color.White
                     }
@@ -43,7 +42,7 @@ Page {
                     attachedObjects: [
                         SystemListDialog{
                             property bool created: false
-                            property int  value: 860515
+                            property int  value: networkBus.city_id
                             id:listDialog
                             title:"选择城市"
                             selectionMode: ListSelectionMode.Single
@@ -67,6 +66,10 @@ Page {
                                         indexpath = 862307;
                                     }
                                     listDialog.value = indexpath;
+                                    if(networkBus.city_id != indexpath){
+                                        line_name.text = "";
+                                        networkBus.changeCity(indexpath);
+                                    }
                                     console.log("===="+listDialog.value);
                                 }
                             }
@@ -169,11 +172,6 @@ Page {
                 fontSize: FontSize.Large
             }
         }
-        /*Container {
-            background: Color.Blue
-            preferredHeight: 2
-            preferredWidth: 768
-        }*/
         Divider {
             
         }
@@ -247,19 +245,8 @@ Page {
                 networkBus.get_lines_by_city(listDialog.value,line_name.text);
                 var page = pageDefinition.createObject();
                 navigationPane.push(page);
-
-                
-                
-            //    line_name.text = networkBus.localDataModel.data(indexPath).line_name;
-            //    console.log("hahahaha:"+line_name.text);
-            //    searchButton.clicked();
             }
         }
-        /*Container {
-            background: Color.Blue
-            preferredHeight: 2
-            preferredWidth: 768
-        }*/
         Divider {
             
         }
@@ -273,6 +260,7 @@ Page {
             text: qsTr("查看所有线路 ")
             preferredWidth: 668
             onClicked: {
+                console.log("listDialog.value:"+listDialog.value)
                 networkBus.get_all_line(listDialog.value)
                 var page = allstations.createObject()
                 navigationPane.push(page)

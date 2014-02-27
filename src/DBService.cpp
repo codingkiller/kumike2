@@ -79,7 +79,16 @@ bool DBService::initDatabase()
    //     alert(tr("Create table error: %1").arg(error.errorMessage()));//.arg(error.text()));
         return false;
     }
-
+    const QString cityidSQL = "CREATE TABLE if not exists local_cityid "
+                                  "(city_id VARCHAR);";
+    sqlda->execute(cityidSQL);
+        if(!sqlda->hasError()) {
+            qDebug() << "Table local_cityid created.";
+        } else {
+            const DataAccessError error = sqlda->error();
+            qDebug() << "init local_cityid table error";
+            return false;
+        }
     return true;
 }
 int DBService::findRecordId(const QString city_id,const QString line_name){
@@ -238,6 +247,60 @@ void DBService::readRecords(const QString city_id)
 QListDataModel<busline*>* DBService::dataModel() const
 {
     return m_dataModel;
+}
+
+void DBService::saveOrUpdateCityId(const QString city_id){
+    const QString sqlQuery = "SELECT city_id FROM local_cityid";
+    QVariant result = sqlda->execute(sqlQuery);
+    QVariantList contact;
+    contact << city_id;
+    if(result.isNull()){
+        sqlda->execute("INSERT INTO local_cityid"
+                      "    (city_id) "
+                      "    VALUES (:city_id)", contact);
+        bool success = false;
+        if(!sqlda->hasError()) {
+            success = true;
+        } else {
+            const DataAccessError error = sqlda->error();
+        }
+    }else{
+    	const QString sqlCommand = "UPDATE local_cityid "
+    	                               "    SET city_id = :city_id";
+    	    bool updated = false;
+    	    sqlda->execute(sqlCommand, contact);
+    	    if (!sqlda->hasError()) {
+    	    	updated = true;
+    	    } else {
+    	    }
+    }
+}
+QString DBService::findCityId(){
+    const QString sqlQuery = "SELECT city_id FROM local_cityid";
+    QVariant result = sqlda->execute(sqlQuery);
+    QVariantList contact;
+    contact << "860515";
+    if(result.isNull()){
+        sqlda->execute("INSERT INTO local_cityid"
+                      "    (city_id) "
+                      "    VALUES (:city_id)", contact);
+        bool success = false;
+        if(!sqlda->hasError()) {
+            success = true;
+        } else {
+            const DataAccessError error = sqlda->error();
+        }
+    }else{
+    	QVariantList list = result.value<QVariantList>();
+    	if(list.size() > 0){
+    		QVariantMap map = list.at(0).value<QVariantMap>();
+    		QString city_id = map["city_id"].toString();
+    		qDebug() << "city_id from db : " << city_id;
+    		return city_id;
+    	}
+    }
+    qDebug() << "no city_id find in table local_cityid" ;
+    return "860515";
 }
 /*void DBService::alert(const QString &message)
 {

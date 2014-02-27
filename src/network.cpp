@@ -38,7 +38,9 @@ void NetworkBus::get_online_gps_finished(QNetworkReply* reply){
 			return ;
 		}
 		for(int i=0;i<m_dataModel->size()-1;i++){
-			m_dataModel->value(i)->setBusState("");
+			station* sta = m_dataModel->value(i);
+			sta->setBusState(NULL);
+		//	m_dataModel->value(i)->setBusState("");
 			for(int j = 0 ; j < records.length();j++){
 				const QStringList var = records.at(j).toStringList();
 				const QString cur_station_state = var[19];
@@ -49,13 +51,16 @@ void NetworkBus::get_online_gps_finished(QNetworkReply* reply){
 			//	float leftPadding = 0;
 				if(cur_station == m_dataModel->value(i)->name() && next_station == m_dataModel->value(i+1)->name()){
 					if(cur_station_state != "2"){//显示在站点
-						m_dataModel->value(i)->setBusState("cur_station");
+					//	m_dataModel->value(i)->setBusState("cur_station");
+						sta->setBusState("cur_station");
 					}
 					else{//显示正中间
-						m_dataModel->value(i)->setBusState("middle");
+					//	m_dataModel->value(i)->setBusState("middle");
+						sta->setBusState("middle");
 					}
 				}
 			}
+			m_dataModel->replace(i,sta);
 		}
 	}
 	setProcess(false);
@@ -183,8 +188,9 @@ void NetworkBus::get_lines_by_city(const QString city_id,const QString line_name
 	pNetworkAccessManager->get(request);
 }
 void NetworkBus::get_all_line(const QString city_id){
-	if(m_alllineDataModel->size() > 0)
+	if(m_alllineDataModel->size() > 0 && !m_cityidchanged){
 		return;
+	}
 	//init();
 	this->setProcess(true);
 	emit processChanged();
@@ -363,11 +369,14 @@ void NetworkBus::onBusLineFinished(QNetworkReply* reply){
 
 
 void NetworkBus::reloadData(){
-	m_city_id = "860515";
+	m_city_id = dbService->findCityId();
 }
 
 void NetworkBus::changeCity(const QString newCity){
 	m_city_id = newCity;
+	m_cityidchanged = true;
+	dbService->saveOrUpdateCityId(newCity);
+	emit localDataModelChanged();
 }
 
 QString NetworkBus::error() const{

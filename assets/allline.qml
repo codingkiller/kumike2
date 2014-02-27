@@ -29,7 +29,7 @@ Page {
                 }
                 Label {
                     text: ""
-                    minWidth: 290
+                    minWidth: networkBus.process ? 290 : 250
                 }
                 Label {
                     id: secondtitlebarcontainerlabel
@@ -47,7 +47,7 @@ Page {
 
     Container {
         leftPadding: 50
-        rightPadding: 50
+     //   rightPadding: 50
         ActivityIndicator {
             id: thirdIndicator
             minHeight: 600
@@ -60,7 +60,7 @@ Page {
         ListView {
         //    property NetworkBus networkBus : networkBus
             id: localDataList
-          //  visible: !networkBus.process
+            visible: !networkBus.process
             dataModel: networkBus.alllineDataModel
             layout: StackListLayout {
                 orientation: LayoutOrientation.TopToBottom

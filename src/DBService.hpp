@@ -43,6 +43,8 @@ public:
     bool updateRecord(const int record_id);
     bool deleteRecord(const int record_id);
     int findRecordId(const QString city_id,const QString line_name);
+    void saveOrUpdateCityId(const QString city_id);
+    QString findCityId();
     DBService();
     bb::cascades::QListDataModel<busline*>* dataModel() const;
 

@@ -19,6 +19,8 @@ class NetworkBus : public QObject{
     Q_OBJECT
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
     Q_PROPERTY(QString line_name READ line_name NOTIFY buslineChanged)
+    Q_PROPERTY(QString city_id READ city_id NOTIFY buslineChanged)
+//    Q_PROPERTY(bool iscityidchanged READ iscityidchanged NOTIFY cityidChanged)
     Q_PROPERTY(QString begin_time READ begin_time NOTIFY buslineChanged)
     Q_PROPERTY(QString end_time READ end_time NOTIFY buslineChanged)
     Q_PROPERTY(QString start_station READ start_station NOTIFY buslineChanged)
@@ -45,6 +47,7 @@ class NetworkBus : public QObject{
 		busline *startLine;
 		busline *endLine;
 		bool m_process;
+		bool m_cityidchanged;
 		QListDataModel<station*>* m_dataModel;
 		QListDataModel<busline*>* m_alllineDataModel;
 //		QListDataModel<busline*> m_localDataModel;
@@ -67,6 +70,7 @@ class NetworkBus : public QObject{
 			m_all_station = "";
 			m_dir = 0;
 			m_process = false;
+			m_cityidchanged = false;
 		//	m_city_id = "";
 			reloadData();
 			m_isopen = 0;
@@ -85,7 +89,8 @@ class NetworkBus : public QObject{
 			return m_dir == 0 ? startLine->getId() : endLine->getId();
 		}
 		QString city_id(){
-			return m_city_id;
+			//return m_city_id;
+			return dbService->findCityId();
 		}
 		QListDataModel<busline*>* localDataModel(){
 			dbService->readRecords(this->city_id());
@@ -109,6 +114,7 @@ class NetworkBus : public QObject{
 		void deleteRecord(const int record_id);
 		void reloadGPSData();
 		void onAlllineDataModelFinished(QNetworkReply* reply);
+
 	public:
 		void reloadData();
 		void locateBus();
@@ -117,7 +123,7 @@ class NetworkBus : public QObject{
 						m_all_station = "";
 						m_dir = 0;
 						m_process = false;
-				reloadData();
+						m_cityidchanged = false;
 						//	m_city_id = "";
 						m_isopen = 0;
 						m_eid = "";
@@ -128,6 +134,7 @@ class NetworkBus : public QObject{
 						m_dataModel = new QListDataModel<station*>();
 						m_alllineDataModel = new QListDataModel<busline*>;
 			dbService = new DBService;
+			reloadData();
 		}
 		QString error() const;
 		QString line_name() const;
@@ -154,7 +161,9 @@ class NetworkBus : public QObject{
 	void setProcess(bool process) {
 		m_process = process;
 	}
-
+	bool iscityidchanged(){
+		return m_cityidchanged;
+	}
 
 Q_SIGNALS:
 			void buslineChanged();
@@ -166,6 +175,7 @@ Q_SIGNALS:
 			void busstateChanged();
 			void localDataModelChanged();
 			void alllineDataModelChanged();
+//			void cityidChanged();
 
 };
 const static QString get_lines_by_city_url = "http://busi.gpsoo.net/v1/bus/get_lines_by_city?type=handset&city_id=";
